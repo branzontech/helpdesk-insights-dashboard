@@ -8,9 +8,16 @@ import CasesStatusChart from '@/components/dashboard/charts/CasesStatusChart';
 import CasesCategoryChart from '@/components/dashboard/charts/CasesCategoryChart';
 import AgentPerformanceChart from '@/components/dashboard/charts/AgentPerformanceChart';
 import SatisfactionChart from '@/components/dashboard/charts/SatisfactionChart';
+import WeeklyActivityChart from '@/components/dashboard/charts/WeeklyActivityChart';
+import TimeRangeChart from '@/components/dashboard/charts/TimeRangeChart';
 
-import { Clock, MessageSquare, Users, ChartBar } from 'lucide-react';
-import { casesStatusData, agentPerformanceData, satisfactionData } from '@/lib/mockData';
+import { Clock, MessageSquare, Users, ChartBar, Timer } from 'lucide-react';
+import { 
+  casesStatusData, 
+  agentPerformanceData, 
+  satisfactionData, 
+  firstResponseTimeData 
+} from '@/lib/mockData';
 
 const Index = () => {
   const avgResponseTime = agentPerformanceData.reduce((sum, agent) => sum + agent.avgResponseTime, 0) / agentPerformanceData.length;
@@ -24,13 +31,22 @@ const Index = () => {
           <Header />
           
           {/* Tarjetas de estadísticas */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
             <StatCard 
               title="Tiempo Promedio de Respuesta" 
               value={`${avgResponseTime.toFixed(1)} min`} 
               icon={<Clock size={20} />} 
               color="alert-info"
               change={{ value: 12, type: 'decrease' }} 
+              footer="Último mes"
+            />
+            
+            <StatCard 
+              title="Tiempo Primera Respuesta" 
+              value={`${firstResponseTimeData.avgMinutes} min`} 
+              icon={<Timer size={20} />} 
+              color="tag-purple"
+              change={{ value: Math.abs(firstResponseTimeData.change), type: 'decrease' }} 
               footer="Último mes"
             />
             
@@ -71,6 +87,11 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <CasesCategoryChart />
             <SatisfactionChart />
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <WeeklyActivityChart />
+            <TimeRangeChart />
           </div>
           
           <div className="mb-6">

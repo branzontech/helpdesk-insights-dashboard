@@ -78,8 +78,8 @@ const AgentPerformanceChart: React.FC<AgentPerformanceChartProps> = ({ className
               formatter={(value, name) => {
                 if (name === 'avgResponseTime') return [value + ' min', 'Tiempo respuesta'];
                 if (name === 'casesHandled') return [value, 'Casos atendidos'];
-                if (name === 'avgResolutionTime') return [value * 10 + ' min', 'Tiempo resolución'];
-                if (name === 'satisfaction') return [(value / 10).toFixed(1) + '/5', 'Satisfacción'];
+                if (name === 'avgResolutionTime') return [(value as number) * 10 + ' min', 'Tiempo resolución'];
+                if (name === 'satisfaction') return [((value as number) / 10).toFixed(1) + '/5', 'Satisfacción'];
                 return [value, name];
               }}
             />

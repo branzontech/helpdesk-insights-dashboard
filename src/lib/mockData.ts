@@ -116,3 +116,30 @@ export const satisfactionData = {
     { month: "Jun", value: 4.7 },
   ],
 };
+
+// Datos para Días más movidos de la semana
+export const weeklyActivityData = [
+  { day: "Lunes", cases: 48 },
+  { day: "Martes", cases: 52 },
+  { day: "Miércoles", cases: 45 },
+  { day: "Jueves", cases: 58 },
+  { day: "Viernes", cases: 42 },
+  { day: "Sábado", cases: 15 },
+  { day: "Domingo", cases: 8 },
+];
+
+// Datos para Tiempo promedio desde la primera respuesta
+export const firstResponseTimeData = {
+  avgMinutes: 18,
+  previousMonth: 22,
+  change: -18.2 // porcentaje de mejora
+};
+
+// Datos para Tiempo por tramo de horarios
+export const timeRangeData = [
+  { range: "0-5 horas", cases: 89, percentage: 36.3 },
+  { range: "5-24 horas", cases: 67, percentage: 27.3 },
+  { range: "1-7 días", cases: 52, percentage: 21.2 },
+  { range: "7-30 días", cases: 28, percentage: 11.4 },
+  { range: "> 30 días", cases: 9, percentage: 3.7 },
+];
