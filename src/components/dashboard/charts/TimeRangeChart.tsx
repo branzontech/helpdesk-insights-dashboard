@@ -1,5 +1,5 @@
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import { timeRangeData } from '@/lib/mockData';
 
 const TimeRangeChart = () => {
@@ -43,7 +43,16 @@ const TimeRangeChart = () => {
             fill="#4A8F9F" 
             radius={[0, 4, 4, 0]}
             name="cases"
-          />
+          >
+            <LabelList 
+              dataKey="percentage" 
+              position="center" 
+              fill="white" 
+              fontSize={12}
+              fontWeight="600"
+              formatter={(value) => `${value}%`}
+            />
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </div>
