@@ -32,10 +32,10 @@ const Index = () => {
         <div className="container mx-auto p-6">
           <div className="flex justify-between items-center mb-6">
             <Header />
-            <Link to="/ticket/TICK-2024-001">
+            <Link to="/tickets">
               <Button className="flex items-center space-x-2">
                 <Ticket className="h-4 w-4" />
-                <span>View Sample Ticket</span>
+                <span>Ticket Management</span>
               </Button>
             </Link>
           </div>
