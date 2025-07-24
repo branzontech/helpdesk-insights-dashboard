@@ -12,7 +12,10 @@ import {
   Calendar,
   Tag as TagIcon,
   Phone,
-  History
+  History,
+  Eye,
+  EyeOff,
+  BarChart3
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -94,6 +97,7 @@ const TicketList: React.FC<TicketListProps> = ({
   onShowHistoryChange
 }) => {
   const [sortBy, setSortBy] = useState<'created' | 'updated' | 'priority'>('updated');
+  const [showStats, setShowStats] = useState<boolean>(false);
 
   const sortedTickets = [...tickets].sort((a, b) => {
     switch (sortBy) {
@@ -115,16 +119,113 @@ const TicketList: React.FC<TicketListProps> = ({
     return acc;
   }, {} as Record<string, number>);
 
+  const priorityCounts = tickets.reduce((acc, ticket) => {
+    acc[ticket.priority] = (acc[ticket.priority] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
   return (
     <div className="h-full flex flex-col bg-background">
       {/* Minimalist Header */}
       <div className="p-4 border-b space-y-3">
         <div className="flex items-center justify-between">
           <h2 className="text-base font-medium">Tickets</h2>
-          <div className="text-sm text-muted-foreground">
-            {tickets.length}
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowStats(!showStats)}
+              className="h-7 px-2"
+            >
+              {showStats ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </Button>
+            <div className="text-sm text-muted-foreground">
+              {tickets.length}
+            </div>
           </div>
         </div>
+
+        {/* Statistics Panel - Collapsible */}
+        {showStats && (
+          <div className="space-y-3 bg-muted/30 p-3 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm font-medium">Estadísticas</span>
+            </div>
+            
+            {/* Status Counts */}
+            <div>
+              <h4 className="text-xs font-medium text-muted-foreground mb-2">Por Estado</h4>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-1">
+                    <AlertCircle className="h-3 w-3 text-blue-500" />
+                    <span>Abiertos</span>
+                  </div>
+                  <span className="font-medium">{statusCounts.open || 0}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-1">
+                    <Clock className="h-3 w-3 text-orange-500" />
+                    <span>En Progreso</span>
+                  </div>
+                  <span className="font-medium">{statusCounts.inProgress || 0}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-1">
+                    <Pause className="h-3 w-3 text-yellow-500" />
+                    <span>Pendientes</span>
+                  </div>
+                  <span className="font-medium">{statusCounts.pending || 0}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-1">
+                    <CheckCircle2 className="h-3 w-3 text-green-500" />
+                    <span>Cerrados</span>
+                  </div>
+                  <span className="font-medium">{statusCounts.closed || 0}</span>
+                </div>
+              </div>
+            </div>
+
+            <Separator className="my-2" />
+
+            {/* Priority Counts */}
+            <div>
+              <h4 className="text-xs font-medium text-muted-foreground mb-2">Por Prioridad</h4>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                    <span>Crítico</span>
+                  </div>
+                  <span className="font-medium">{priorityCounts.critical || 0}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+                    <span>Alto</span>
+                  </div>
+                  <span className="font-medium">{priorityCounts.high || 0}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                    <span>Medio</span>
+                  </div>
+                  <span className="font-medium">{priorityCounts.medium || 0}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                    <span>Bajo</span>
+                  </div>
+                  <span className="font-medium">{priorityCounts.low || 0}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Search */}
         <div className="relative">
