@@ -17,10 +17,12 @@ const TicketLayout = () => {
     searchQuery,
     statusFilter,
     priorityFilter,
+    showHistory,
     setSelectedTicketId,
     setSearchQuery,
     setStatusFilter,
     setPriorityFilter,
+    setShowHistory,
     createTicket,
     updateTicket,
     addMessage
@@ -75,6 +77,8 @@ const TicketLayout = () => {
               onStatusFilterChange={setStatusFilter}
               priorityFilter={priorityFilter}
               onPriorityFilterChange={setPriorityFilter}
+              showHistory={showHistory}
+              onShowHistoryChange={setShowHistory}
             />
           </Panel>
           

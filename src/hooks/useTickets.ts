@@ -6,17 +6,30 @@ export const useTickets = () => {
   const [tickets, setTickets] = useState<TicketDetail[]>(mockTickets);
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState<string>('active'); // Changed default to 'active'
   const [priorityFilter, setPriorityFilter] = useState<string>('all');
+  const [showHistory, setShowHistory] = useState<boolean>(false);
 
   const selectedTicket = tickets.find(t => t.id === selectedTicketId) || null;
 
   const filteredTickets = tickets.filter(ticket => {
     const matchesSearch = ticket.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          ticket.customer.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         ticket.customer.phone?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          ticket.id.toLowerCase().includes(searchQuery.toLowerCase());
     
-    const matchesStatus = statusFilter === 'all' || ticket.status === statusFilter;
+    // Filter by status - 'active' means everything except 'closed'
+    let matchesStatus = false;
+    if (statusFilter === 'all') {
+      matchesStatus = true;
+    } else if (statusFilter === 'active') {
+      matchesStatus = ticket.status !== 'closed';
+    } else if (statusFilter === 'history') {
+      matchesStatus = ticket.status === 'closed';
+    } else {
+      matchesStatus = ticket.status === statusFilter;
+    }
+    
     const matchesPriority = priorityFilter === 'all' || ticket.priority === priorityFilter;
     
     return matchesSearch && matchesStatus && matchesPriority;
@@ -103,10 +116,12 @@ export const useTickets = () => {
     searchQuery,
     statusFilter, 
     priorityFilter,
+    showHistory,
     setSelectedTicketId,
     setSearchQuery,
     setStatusFilter,
     setPriorityFilter,
+    setShowHistory,
     createTicket,
     updateTicket,
     addMessage

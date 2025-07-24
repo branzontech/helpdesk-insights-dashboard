@@ -10,7 +10,9 @@ import {
   MoreVertical,
   SortDesc,
   Calendar,
-  Tag as TagIcon
+  Tag as TagIcon,
+  Phone,
+  History
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -34,6 +36,8 @@ interface TicketListProps {
   onStatusFilterChange: (status: string) => void;
   priorityFilter: string;
   onPriorityFilterChange: (priority: string) => void;
+  showHistory?: boolean;
+  onShowHistoryChange?: (show: boolean) => void;
 }
 
 const getStatusIcon = (status: string) => {
@@ -58,6 +62,16 @@ const getStatusColor = (status: string) => {
 
 const getPriorityBadge = (priority: string) => {
   const colors = {
+    critical: 'bg-red-500 text-red-50',
+    high: 'bg-orange-500 text-orange-50',
+    medium: 'bg-yellow-500 text-yellow-50',
+    low: 'bg-green-500 text-green-50'
+  };
+  return colors[priority as keyof typeof colors] || 'bg-gray-500 text-gray-50';
+};
+
+const getPriorityDot = (priority: string) => {
+  const colors = {
     critical: 'bg-red-500',
     high: 'bg-orange-500',
     medium: 'bg-yellow-500',
@@ -75,7 +89,9 @@ const TicketList: React.FC<TicketListProps> = ({
   statusFilter,
   onStatusFilterChange,
   priorityFilter,
-  onPriorityFilterChange
+  onPriorityFilterChange,
+  showHistory,
+  onShowHistoryChange
 }) => {
   const [sortBy, setSortBy] = useState<'created' | 'updated' | 'priority'>('updated');
 
@@ -124,15 +140,16 @@ const TicketList: React.FC<TicketListProps> = ({
         {/* Compact Filters */}
         <div className="flex space-x-2">
           <Select value={statusFilter} onValueChange={onStatusFilterChange}>
-            <SelectTrigger className="w-24 h-8 text-xs">
+            <SelectTrigger className="w-28 h-8 text-xs">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="open">Open</SelectItem>
-              <SelectItem value="inProgress">Active</SelectItem>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="closed">Closed</SelectItem>
+              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="active">Activos</SelectItem>
+              <SelectItem value="open">Abiertos</SelectItem>
+              <SelectItem value="inProgress">En Progreso</SelectItem>
+              <SelectItem value="pending">Pendientes</SelectItem>
+              <SelectItem value="history">Histórico</SelectItem>
             </SelectContent>
           </Select>
 
@@ -192,10 +209,16 @@ const TicketList: React.FC<TicketListProps> = ({
               >
                 <CardContent className="p-3">
                   <div className="space-y-2">
-                    {/* Header - Simplified */}
+                     {/* Header - Simplified */}
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-2 min-w-0 flex-1">
-                        <div className={`w-2 h-2 rounded-full ${getPriorityBadge(ticket.priority)}`} />
+                        <div className={`w-2 h-2 rounded-full ${getPriorityDot(ticket.priority)}`} />
+                        <Badge 
+                          variant="secondary" 
+                          className={`text-xs px-2 py-0 ${getPriorityBadge(ticket.priority)}`}
+                        >
+                          {ticket.priority.toUpperCase()}
+                        </Badge>
                         <span className="text-xs font-mono text-muted-foreground">
                           #{ticket.id}
                         </span>
@@ -236,8 +259,16 @@ const TicketList: React.FC<TicketListProps> = ({
                             {ticket.customer.name.split(' ').map(n => n[0]).join('')}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="text-xs text-muted-foreground truncate">
-                          {ticket.customer.name}
+                        <div className="flex flex-col min-w-0 flex-1">
+                          <div className="text-xs text-muted-foreground truncate">
+                            {ticket.customer.name}
+                          </div>
+                          {ticket.customer.phone && (
+                            <div className="flex items-center space-x-1 text-xs text-muted-foreground/70">
+                              <Phone className="h-3 w-3" />
+                              <span className="truncate">{ticket.customer.phone}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                       
