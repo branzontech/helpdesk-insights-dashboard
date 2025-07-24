@@ -378,18 +378,32 @@ const TicketList: React.FC<TicketListProps> = ({
                       
                       <div className="flex items-center space-x-2">
                         {/* Assign Agent Button */}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onAssignAgent?.(ticket.id);
-                          }}
-                          title="Asignar agente"
-                        >
-                          <UserPlus className="h-3 w-3" />
-                        </Button>
+                        {!ticket.assignedAgent && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-6 px-2 text-xs"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onAssignAgent?.(ticket.id);
+                            }}
+                            title="Asignar agente"
+                          >
+                            <UserPlus className="h-3 w-3 mr-1" />
+                            Asignar
+                          </Button>
+                        )}
+                        {ticket.assignedAgent && (
+                          <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                            <Avatar className="h-4 w-4">
+                              <AvatarImage src={ticket.assignedAgent.avatar} />
+                              <AvatarFallback className="text-xs">
+                                {ticket.assignedAgent.name.split(' ').map(n => n[0]).join('')}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="truncate max-w-16">{ticket.assignedAgent.name.split(' ')[0]}</span>
+                          </div>
+                        )}
                         
                         <div className="flex items-center space-x-1 text-xs text-muted-foreground">
                           {ticket.messages.length > 0 && (
