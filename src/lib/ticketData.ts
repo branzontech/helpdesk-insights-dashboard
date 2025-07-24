@@ -299,5 +299,345 @@ export const mockTickets: TicketDetail[] = [
       resolutionTime: 180,
       status: "warning"
     }
+  },
+  {
+    id: "TICK-2024-005",
+    title: "Database connection timeout errors",
+    description: "Getting intermittent database timeouts on the main application. Affecting customer transactions.",
+    status: "open",
+    priority: "critical",
+    category: "Database",
+    createdAt: "2024-01-16T10:30:00Z",
+    updatedAt: "2024-01-16T10:30:00Z",
+    tags: ["database", "timeout", "performance", "transactions"],
+    customer: {
+      id: "CUST-005",
+      name: "Lisa Wang",
+      email: "l.wang@operations.company.com",
+      phone: "+1 (555) 345-6789",
+      avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=150&h=150&fit=crop&crop=face",
+      company: "Operations Central",
+      location: "Seattle, USA",
+      timezone: "PST",
+      totalTickets: 3,
+      satisfactionScore: 4.7
+    },
+    messages: [],
+    customFields: {
+      environment: "Production",
+      errorRate: "15%"
+    },
+    sla: {
+      firstResponseTime: 15,
+      resolutionTime: 60,
+      status: "breached"
+    }
+  },
+  {
+    id: "TICK-2024-006",
+    title: "Password reset not working",
+    description: "Users cannot reset their passwords. Reset emails are not being sent.",
+    status: "inProgress",
+    priority: "high",
+    category: "Authentication",
+    createdAt: "2024-01-15T16:20:00Z",
+    updatedAt: "2024-01-16T09:15:00Z",
+    tags: ["password", "email", "authentication", "smtp"],
+    customer: {
+      id: "CUST-006",
+      name: "Robert Martinez",
+      email: "r.martinez@security.company.com",
+      phone: "+1 (555) 567-8901",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      company: "Security First",
+      location: "Miami, USA",
+      timezone: "EST",
+      totalTickets: 7,
+      satisfactionScore: 4.3
+    },
+    assignedAgent: {
+      id: "AGENT-001",
+      name: "Juan Pérez",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      email: "juan.perez@support.com"
+    },
+    messages: [
+      {
+        id: "MSG-601",
+        content: "Multiple users are reporting that password reset emails are not being sent. This is affecting productivity across the organization.",
+        timestamp: "2024-01-15T16:20:00Z",
+        author: {
+          id: "CUST-006",
+          name: "Robert Martinez",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+          type: "customer"
+        }
+      }
+    ],
+    customFields: {
+      affectedUsers: "25+",
+      smtpServer: "smtp.company.com"
+    },
+    sla: {
+      firstResponseTime: 45,
+      resolutionTime: 240,
+      status: "met"
+    }
+  },
+  {
+    id: "TICK-2024-007",
+    title: "Slow website loading times",
+    description: "Company website is loading very slowly for customers. Multiple complaints received.",
+    status: "open",
+    priority: "medium",
+    category: "Performance",
+    createdAt: "2024-01-16T11:45:00Z",
+    updatedAt: "2024-01-16T11:45:00Z",
+    tags: ["website", "performance", "loading", "customer-facing"],
+    customer: {
+      id: "CUST-007",
+      name: "Angela Foster",
+      email: "a.foster@web.company.com",
+      phone: "+1 (555) 678-9012",
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop&crop=face",
+      company: "Web Solutions",
+      location: "Portland, USA",
+      timezone: "PST",
+      totalTickets: 11,
+      satisfactionScore: 4.6
+    },
+    messages: [],
+    customFields: {
+      loadTime: "8.5 seconds",
+      server: "AWS EC2"
+    },
+    sla: {
+      firstResponseTime: 60,
+      resolutionTime: 480,
+      status: "met"
+    }
+  },
+  {
+    id: "TICK-2024-008",
+    title: "Mobile app crashes on startup",
+    description: "iOS app crashes immediately after opening. Affecting all iOS 17+ users.",
+    status: "pending",
+    priority: "critical",
+    category: "Mobile App",
+    createdAt: "2024-01-16T08:00:00Z",
+    updatedAt: "2024-01-16T12:30:00Z",
+    tags: ["mobile", "ios", "crash", "startup"],
+    customer: {
+      id: "CUST-008",
+      name: "Kevin Park",
+      email: "k.park@mobile.company.com",
+      phone: "+1 (555) 789-0123",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      company: "Mobile First",
+      location: "Los Angeles, USA",
+      timezone: "PST",
+      totalTickets: 4,
+      satisfactionScore: 4.4
+    },
+    assignedAgent: {
+      id: "AGENT-002",
+      name: "María López",
+      avatar: "https://images.unsplash.com/photo-1594736797933-d0c56662bdc6?w=150&h=150&fit=crop&crop=face",
+      email: "maria.lopez@support.com"
+    },
+    messages: [
+      {
+        id: "MSG-801",
+        content: "The iOS app is crashing for all users with iOS 17 and above. This is a critical issue affecting our mobile user base.",
+        timestamp: "2024-01-16T08:00:00Z",
+        author: {
+          id: "CUST-008",
+          name: "Kevin Park",
+          avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+          type: "customer"
+        }
+      }
+    ],
+    customFields: {
+      platform: "iOS 17+",
+      crashRate: "100%",
+      appVersion: "2.1.5"
+    },
+    sla: {
+      firstResponseTime: 15,
+      resolutionTime: 120,
+      status: "breached"
+    }
+  },
+  {
+    id: "TICK-2024-009",
+    title: "SSL certificate expiring soon",
+    description: "Main website SSL certificate will expire in 3 days. Need renewal urgently.",
+    status: "open",
+    priority: "high",
+    category: "Security",
+    createdAt: "2024-01-16T13:15:00Z",
+    updatedAt: "2024-01-16T13:15:00Z",
+    tags: ["ssl", "certificate", "security", "website"],
+    customer: {
+      id: "CUST-009",
+      name: "Sandra Kim",
+      email: "s.kim@security.company.com",
+      phone: "+1 (555) 890-1234",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+      company: "SecureWeb Inc",
+      location: "Boston, USA",
+      timezone: "EST",
+      totalTickets: 6,
+      satisfactionScore: 4.9
+    },
+    messages: [],
+    customFields: {
+      expiryDate: "2024-01-19",
+      certificateType: "Wildcard SSL"
+    },
+    sla: {
+      firstResponseTime: 30,
+      resolutionTime: 240,
+      status: "met"
+    }
+  },
+  {
+    id: "TICK-2024-010",
+    title: "Backup system failed last night",
+    description: "Automated backup process failed. Need to investigate and ensure data safety.",
+    status: "inProgress",
+    priority: "high",
+    category: "Backup & Recovery",
+    createdAt: "2024-01-16T06:30:00Z",
+    updatedAt: "2024-01-16T10:45:00Z",
+    tags: ["backup", "failure", "data", "automation"],
+    customer: {
+      id: "CUST-010",
+      name: "James Wilson",
+      email: "j.wilson@data.company.com",
+      phone: "+1 (555) 901-2345",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+      company: "DataSafe Corp",
+      location: "Denver, USA",
+      timezone: "MST",
+      totalTickets: 9,
+      satisfactionScore: 4.5
+    },
+    assignedAgent: {
+      id: "AGENT-003",
+      name: "Carlos Rodríguez",
+      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+      email: "carlos.rodriguez@support.com"
+    },
+    messages: [
+      {
+        id: "MSG-1001",
+        content: "Our automated backup system failed last night at 2:30 AM. The error logs show a disk space issue, but I need technical help to investigate further.",
+        timestamp: "2024-01-16T06:30:00Z",
+        author: {
+          id: "CUST-010",
+          name: "James Wilson",
+          avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face",
+          type: "customer"
+        }
+      }
+    ],
+    customFields: {
+      backupSize: "2.3 TB",
+      errorCode: "DISK_FULL",
+      lastSuccessful: "2024-01-14"
+    },
+    sla: {
+      firstResponseTime: 30,
+      resolutionTime: 360,
+      status: "met"
+    }
+  },
+  {
+    id: "TICK-2024-011",
+    title: "User unable to upload files",
+    description: "File upload feature not working in the web application. Getting permission errors.",
+    status: "open",
+    priority: "medium",
+    category: "File Management",
+    createdAt: "2024-01-16T14:20:00Z",
+    updatedAt: "2024-01-16T14:20:00Z",
+    tags: ["upload", "files", "permissions", "web-app"],
+    customer: {
+      id: "CUST-011",
+      name: "Rachel Green",
+      email: "r.green@files.company.com",
+      phone: "+1 (555) 012-3456",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b993?w=150&h=150&fit=crop&crop=face",
+      company: "FileShare Pro",
+      location: "Phoenix, USA",
+      timezone: "MST",
+      totalTickets: 2,
+      satisfactionScore: 4.0
+    },
+    messages: [],
+    customFields: {
+      fileSize: "15 MB",
+      fileType: "PDF",
+      browser: "Chrome 120"
+    },
+    sla: {
+      firstResponseTime: 60,
+      resolutionTime: 480,
+      status: "met"
+    }
+  },
+  {
+    id: "TICK-2024-012",
+    title: "API rate limiting issues",
+    description: "Third-party API integration hitting rate limits too frequently. Need optimization.",
+    status: "pending",
+    priority: "low",
+    category: "API Integration",
+    createdAt: "2024-01-15T11:30:00Z",
+    updatedAt: "2024-01-16T09:00:00Z",
+    tags: ["api", "rate-limit", "integration", "optimization"],
+    customer: {
+      id: "CUST-012",
+      name: "Tom Anderson",
+      email: "t.anderson@api.company.com",
+      phone: "+1 (555) 123-0987",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      company: "API Solutions",
+      location: "Atlanta, USA",
+      timezone: "EST",
+      totalTickets: 13,
+      satisfactionScore: 4.2
+    },
+    assignedAgent: {
+      id: "AGENT-001",
+      name: "Juan Pérez",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      email: "juan.perez@support.com"
+    },
+    messages: [
+      {
+        id: "MSG-1201",
+        content: "We're hitting the API rate limits too often during peak hours. Can we optimize the call frequency or upgrade our plan?",
+        timestamp: "2024-01-15T11:30:00Z",
+        author: {
+          id: "CUST-012",
+          name: "Tom Anderson",
+          avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+          type: "customer"
+        }
+      }
+    ],
+    customFields: {
+      apiProvider: "External Service",
+      currentLimit: "1000/hour",
+      usage: "950/hour"
+    },
+    sla: {
+      firstResponseTime: 120,
+      resolutionTime: 720,
+      status: "met"
+    }
   }
 ];
