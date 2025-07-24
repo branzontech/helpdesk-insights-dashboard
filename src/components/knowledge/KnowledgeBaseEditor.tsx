@@ -165,244 +165,98 @@ const KnowledgeBaseEditor: React.FC<KnowledgeBaseEditorProps> = ({
   );
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">
-            {isEditing ? 'Editar Artículo' : 'Nuevo Artículo'}
-          </h1>
-          <p className="text-muted-foreground">
-            {isEditing 
-              ? `Editando: ${existingArticle?.title}` 
-              : 'Crear un nuevo artículo para la base de conocimiento'
-            }
-          </p>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={() => setIsPreview(!isPreview)}>
-            <Eye className="h-4 w-4 mr-2" />
-            {isPreview ? 'Editor' : 'Vista previa'}
+    <div className="max-w-4xl mx-auto p-6">
+      {/* Simple Header */}
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-semibold">
+          {isEditing ? 'Editar Artículo' : 'Nuevo Artículo'}
+        </h1>
+        <div className="flex gap-3">
+          <Button variant="ghost" onClick={() => setIsPreview(!isPreview)}>
+            {isPreview ? 'Editar' : 'Vista previa'}
           </Button>
-          <Button variant="outline" onClick={onCancel}>
-            <X className="h-4 w-4 mr-2" />
-            Cancelar
-          </Button>
-          <Button 
-            variant="outline"
-            onClick={() => handleSave('draft')}
-            disabled={!formData.title.trim()}
-          >
-            <Save className="h-4 w-4 mr-2" />
-            Guardar borrador
-          </Button>
-          <Button 
-            onClick={() => handleSave('published')}
-            disabled={!formData.title.trim() || !formData.content.trim()}
-          >
-            <Upload className="h-4 w-4 mr-2" />
+          <Button variant="outline" onClick={onCancel}>Cancelar</Button>
+          <Button onClick={() => handleSave('published')} disabled={!formData.title.trim() || !formData.content.trim()}>
             Publicar
           </Button>
         </div>
       </div>
 
-      {isDirty && (
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Tienes cambios sin guardar. Asegúrate de guardar antes de salir.
-          </AlertDescription>
-        </Alert>
-      )}
-
       {isPreview ? renderPreview() : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Editor */}
-          <div className="lg:col-span-2 space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Contenido Principal</CardTitle>
-                <CardDescription>
-                  Información básica y contenido del artículo
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Título *</Label>
-                  <Input
-                    id="title"
-                    placeholder="Título del artículo"
-                    value={formData.title}
-                    onChange={(e) => handleInputChange('title', e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="summary">Resumen *</Label>
-                  <Textarea
-                    id="summary"
-                    placeholder="Breve descripción del artículo (máximo 200 caracteres)"
-                    value={formData.summary}
-                    onChange={(e) => handleInputChange('summary', e.target.value)}
-                    maxLength={200}
-                    rows={3}
-                  />
-                  <div className="text-xs text-muted-foreground text-right">
-                    {formData.summary.length}/200 caracteres
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="content">Contenido *</Label>
-                  <Textarea
-                    id="content"
-                    placeholder="Contenido completo del artículo. Puedes usar Markdown básico como # para títulos, ** para negrita, etc."
-                    value={formData.content}
-                    onChange={(e) => handleInputChange('content', e.target.value)}
-                    rows={20}
-                    className="font-mono text-sm"
-                  />
-                  <div className="text-xs text-muted-foreground">
-                    Tiempo estimado de lectura: {formData.estimatedReadTime} minutos
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+        <div className="space-y-6">
+          {/* Title */}
+          <div>
+            <Input
+              placeholder="Título del artículo"
+              value={formData.title}
+              onChange={(e) => handleInputChange('title', e.target.value)}
+              className="text-lg font-medium border-0 border-b border-border rounded-none px-0 focus-visible:ring-0 focus-visible:border-primary"
+            />
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Status & Publishing */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Configuración
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="status">Estado</Label>
-                  <Select value={formData.status} onValueChange={(value: any) => handleInputChange('status', value)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="draft">Borrador</SelectItem>
-                      <SelectItem value="published">Publicado</SelectItem>
-                      <SelectItem value="archived">Archivado</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+          {/* Summary */}
+          <div>
+            <Textarea
+              placeholder="Resumen breve del artículo..."
+              value={formData.summary}
+              onChange={(e) => handleInputChange('summary', e.target.value)}
+              maxLength={200}
+              rows={2}
+              className="border-0 border-b border-border rounded-none px-0 resize-none focus-visible:ring-0 focus-visible:border-primary"
+            />
+          </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="category">Categoría *</Label>
-                  <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Seleccionar categoría" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {knowledgeBaseCategories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
+          {/* Content */}
+          <div>
+            <Textarea
+              placeholder="Escribe el contenido del artículo aquí..."
+              value={formData.content}
+              onChange={(e) => handleInputChange('content', e.target.value)}
+              rows={15}
+              className="min-h-[400px] border-0 focus-visible:ring-0 resize-none"
+            />
+          </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="difficulty">Nivel de dificultad</Label>
-                  <Select value={formData.difficulty} onValueChange={(value: any) => handleInputChange('difficulty', value)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="beginner">Principiante</SelectItem>
-                      <SelectItem value="intermediate">Intermedio</SelectItem>
-                      <SelectItem value="advanced">Avanzado</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardContent>
-            </Card>
+          {/* Simple metadata */}
+          <div className="flex gap-4 pt-4 border-t">
+            <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Categoría" />
+              </SelectTrigger>
+              <SelectContent>
+                {knowledgeBaseCategories.map((category) => (
+                  <SelectItem key={category.id} value={category.id}>
+                    {category.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-            {/* Tags */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Tag className="h-4 w-4 mr-2" />
-                  Etiquetas
-                </CardTitle>
-                <CardDescription>
-                  Agregar etiquetas para mejorar la búsqueda
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex space-x-2">
-                  <Input
-                    placeholder="Nueva etiqueta"
-                    value={newTag}
-                    onChange={(e) => setNewTag(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
-                  />
-                  <Button onClick={handleAddTag} size="sm">
-                    Agregar
-                  </Button>
-                </div>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Agregar etiqueta"
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleAddTag()}
+                className="w-32"
+              />
+              <Button variant="ghost" onClick={handleAddTag} size="sm">+</Button>
+            </div>
 
-                {formData.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {formData.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
-                        <button
-                          className="ml-1 hover:text-destructive"
-                          onClick={() => handleRemoveTag(tag)}
-                        >
-                          ×
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Metadata */}
-            {isEditing && existingArticle && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Información del artículo</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm">
-                  <div className="flex items-center space-x-2">
-                    <User className="h-4 w-4 text-muted-foreground" />
-                    <span>Autor: {existingArticle.author.name}</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span>
-                      Creado: {new Date(existingArticle.createdAt).toLocaleDateString('es-ES')}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
-                    <span>
-                      Actualizado: {new Date(existingArticle.updatedAt).toLocaleDateString('es-ES')}
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Eye className="h-4 w-4 text-muted-foreground" />
-                    <span>{existingArticle.viewCount} visualizaciones</span>
-                  </div>
-                  <Separator />
-                  <div className="text-xs text-muted-foreground">
-                    Versión actual: {existingArticle.version}
-                  </div>
-                </CardContent>
-              </Card>
+            {formData.tags.length > 0 && (
+              <div className="flex gap-1 flex-wrap">
+                {formData.tags.map((tag) => (
+                  <Badge key={tag} variant="secondary" className="text-xs">
+                    {tag}
+                    <button
+                      className="ml-1 hover:text-destructive"
+                      onClick={() => handleRemoveTag(tag)}
+                    >
+                      ×
+                    </button>
+                  </Badge>
+                ))}
+              </div>
             )}
           </div>
         </div>
