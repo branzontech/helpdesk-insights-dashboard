@@ -11,7 +11,9 @@ import SatisfactionChart from '@/components/dashboard/charts/SatisfactionChart';
 import WeeklyActivityChart from '@/components/dashboard/charts/WeeklyActivityChart';
 import TimeRangeChart from '@/components/dashboard/charts/TimeRangeChart';
 
-import { Clock, MessageSquare, Users, ChartBar, Timer } from 'lucide-react';
+import { Clock, MessageSquare, Users, ChartBar, Timer, Ticket } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 import { 
   casesStatusData, 
   agentPerformanceData, 
@@ -28,7 +30,15 @@ const Index = () => {
       
       <div className="pl-64">
         <div className="container mx-auto p-6">
-          <Header />
+          <div className="flex justify-between items-center mb-6">
+            <Header />
+            <Link to="/ticket/TICK-2024-001">
+              <Button className="flex items-center space-x-2">
+                <Ticket className="h-4 w-4" />
+                <span>View Sample Ticket</span>
+              </Button>
+            </Link>
+          </div>
           
           {/* Tarjetas de estadísticas */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">

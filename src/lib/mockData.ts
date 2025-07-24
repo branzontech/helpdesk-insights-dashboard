@@ -16,6 +16,64 @@ export interface Case {
   satisfaction?: 1 | 2 | 3 | 4 | 5;
 }
 
+export interface Customer {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  company?: string;
+  location?: string;
+  timezone?: string;
+  totalTickets: number;
+  satisfactionScore: number;
+}
+
+export interface TicketMessage {
+  id: string;
+  content: string;
+  timestamp: string;
+  author: {
+    id: string;
+    name: string;
+    avatar?: string;
+    type: 'customer' | 'agent' | 'system';
+  };
+  attachments?: Array<{
+    id: string;
+    name: string;
+    size: string;
+    type: string;
+  }>;
+  isPrivate?: boolean;
+}
+
+export interface TicketDetail {
+  id: string;
+  title: string;
+  description: string;
+  status: 'open' | 'inProgress' | 'closed' | 'pending';
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+  dueDate?: string;
+  tags: string[];
+  customer: Customer;
+  assignedAgent?: {
+    id: string;
+    name: string;
+    avatar: string;
+    email: string;
+  };
+  messages: TicketMessage[];
+  customFields?: Record<string, any>;
+  sla?: {
+    firstResponseTime: number;
+    resolutionTime: number;
+    status: 'met' | 'warning' | 'breached';
+  };
+}
+
 export interface Agent {
   id: string;
   name: string;
@@ -143,3 +201,121 @@ export const timeRangeData = [
   { range: "7-30 días", cases: 28, percentage: 11.4 },
   { range: "> 30 días", cases: 9, percentage: 3.7 },
 ];
+
+// Mock data for ticket management
+export const mockTicketDetail: TicketDetail = {
+  id: "TICK-2024-001",
+  title: "Unable to access company email on mobile device",
+  description: "I'm having trouble setting up my company email on my iPhone. I've tried multiple times but keep getting authentication errors.",
+  status: "inProgress",
+  priority: "high",
+  category: "Email & Communication",
+  createdAt: "2024-01-15T09:30:00Z",
+  updatedAt: "2024-01-15T14:45:00Z",
+  dueDate: "2024-01-16T17:00:00Z",
+  tags: ["email", "mobile", "authentication", "iOS"],
+  customer: {
+    id: "CUST-001",
+    name: "Sarah Johnson",
+    email: "sarah.johnson@company.com",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b993?w=150&h=150&fit=crop&crop=face",
+    company: "TechCorp Solutions",
+    location: "New York, USA",
+    timezone: "EST",
+    totalTickets: 12,
+    satisfactionScore: 4.5
+  },
+  assignedAgent: {
+    id: "AGENT-001",
+    name: "Juan Pérez",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    email: "juan.perez@support.com"
+  },
+  messages: [
+    {
+      id: "MSG-001",
+      content: "Hi there! I'm having trouble setting up my company email on my iPhone. I've tried multiple times but keep getting authentication errors. The error message says 'Cannot verify server identity'. Can you help me with this?",
+      timestamp: "2024-01-15T09:30:00Z",
+      author: {
+        id: "CUST-001",
+        name: "Sarah Johnson",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b993?w=150&h=150&fit=crop&crop=face",
+        type: "customer"
+      },
+      attachments: [
+        {
+          id: "ATT-001",
+          name: "error-screenshot.png",
+          size: "245 KB",
+          type: "image/png"
+        }
+      ]
+    },
+    {
+      id: "MSG-002",
+      content: "Hello Sarah! Thank you for contacting our support team. I understand you're experiencing difficulties setting up your company email on your iPhone. The 'Cannot verify server identity' error typically occurs when there's an SSL certificate issue or incorrect server settings.\n\nLet me help you resolve this. Could you please provide me with:\n1. Your iPhone model and iOS version\n2. The email app you're trying to use (native Mail app or third-party)\n3. The exact error message screenshot you've attached\n\nI'll guide you through the correct configuration steps.",
+      timestamp: "2024-01-15T10:15:00Z",
+      author: {
+        id: "AGENT-001",
+        name: "Juan Pérez",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        type: "agent"
+      }
+    },
+    {
+      id: "MSG-003",
+      content: "Hi Juan! Thank you for the quick response. Here are the details:\n\n1. iPhone 14 Pro, iOS 17.2\n2. Using the native Mail app\n3. I've attached the screenshot in my previous message\n\nI've been trying to set this up for the past hour and it's quite frustrating. I need access to my emails urgently for a client meeting this afternoon.",
+      timestamp: "2024-01-15T10:45:00Z",
+      author: {
+        id: "CUST-001",
+        name: "Sarah Johnson",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b993?w=150&h=150&fit=crop&crop=face",
+        type: "customer"
+      }
+    },
+    {
+      id: "MSG-004",
+      content: "Perfect! I can see the issue from your screenshot. The problem is with the SSL settings for the incoming mail server. Let me walk you through the correct configuration:\n\n**IMAP Settings for iPhone:**\n- Incoming Mail Server: mail.company.com\n- Username: sarah.johnson@company.com\n- Password: [your email password]\n- Port: 993\n- SSL: ON\n- Authentication: Password\n\n**SMTP Settings:**\n- Outgoing Mail Server: smtp.company.com\n- Port: 587\n- SSL: ON (STARTTLS)\n- Authentication: Password\n\nPlease try these settings and let me know if you encounter any issues. I'll stay online to assist you further.",
+      timestamp: "2024-01-15T11:00:00Z",
+      author: {
+        id: "AGENT-001",
+        name: "Juan Pérez",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+        type: "agent"
+      }
+    },
+    {
+      id: "MSG-005",
+      content: "Ticket priority elevated to HIGH due to urgent business need for client meeting.",
+      timestamp: "2024-01-15T11:05:00Z",
+      author: {
+        id: "SYSTEM",
+        name: "System",
+        type: "system"
+      },
+      isPrivate: true
+    },
+    {
+      id: "MSG-006",
+      content: "It worked! Thank you so much, Juan! The email is now syncing perfectly on my iPhone. I really appreciate your quick and detailed help. The step-by-step instructions were exactly what I needed.",
+      timestamp: "2024-01-15T11:30:00Z",
+      author: {
+        id: "CUST-001",
+        name: "Sarah Johnson",
+        avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b993?w=150&h=150&fit=crop&crop=face",
+        type: "customer"
+      }
+    }
+  ],
+  customFields: {
+    deviceType: "iPhone 14 Pro",
+    osVersion: "iOS 17.2",
+    urgency: "Business Critical",
+    department: "Sales"
+  },
+  sla: {
+    firstResponseTime: 45, // minutes
+    resolutionTime: 120, // minutes
+    status: "met"
+  }
+};
