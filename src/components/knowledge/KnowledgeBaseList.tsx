@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Eye, 
   Edit, 
@@ -22,6 +22,14 @@ import {
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import { knowledgeBaseArticles, knowledgeBaseCategories, type KnowledgeBaseArticle } from '@/lib/knowledgeBaseData';
 
 interface KnowledgeBaseListProps {
@@ -39,6 +47,9 @@ const KnowledgeBaseList: React.FC<KnowledgeBaseListProps> = ({
   onViewArticle,
   onEditArticle
 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 9;
+
   // Filter articles based on search and category
   const filteredArticles = knowledgeBaseArticles.filter((article) => {
     const matchesSearch = !searchQuery || 
@@ -51,6 +62,17 @@ const KnowledgeBaseList: React.FC<KnowledgeBaseListProps> = ({
     
     return matchesSearch && matchesCategory && article.status === 'published';
   });
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
+  const startIndex = (currentPage - 1) * articlesPerPage;
+  const endIndex = startIndex + articlesPerPage;
+  const currentArticles = filteredArticles.slice(startIndex, endIndex);
+
+  // Reset to first page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory]);
 
   const getCategoryName = (categoryId: string) => {
     return knowledgeBaseCategories.find(cat => cat.id === categoryId)?.name || 'Sin categoría';
@@ -280,8 +302,13 @@ const KnowledgeBaseList: React.FC<KnowledgeBaseListProps> = ({
       {/* Results summary */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Mostrando {filteredArticles.length} de {knowledgeBaseArticles.length} artículos
+          Mostrando {startIndex + 1}-{Math.min(endIndex, filteredArticles.length)} de {filteredArticles.length} artículos
         </p>
+        {totalPages > 1 && (
+          <p className="text-sm text-muted-foreground">
+            Página {currentPage} de {totalPages}
+          </p>
+        )}
       </div>
 
       {/* Articles grid/list */}
@@ -290,7 +317,7 @@ const KnowledgeBaseList: React.FC<KnowledgeBaseListProps> = ({
           ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           : "space-y-4"
       }>
-        {filteredArticles.map((article) => (
+        {currentArticles.map((article) => (
           viewMode === 'grid' ? (
             <ArticleCard key={article.id} article={article} />
           ) : (
@@ -298,6 +325,43 @@ const KnowledgeBaseList: React.FC<KnowledgeBaseListProps> = ({
           )
         ))}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Pagination className="mt-8">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+              >
+                Anterior
+              </PaginationPrevious>
+            </PaginationItem>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <PaginationItem key={page}>
+                <PaginationLink
+                  onClick={() => setCurrentPage(page)}
+                  isActive={currentPage === page}
+                  className="cursor-pointer"
+                >
+                  {page}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            
+            <PaginationItem>
+              <PaginationNext
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+              >
+                Siguiente
+              </PaginationNext>
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
     </div>
   );
 };
