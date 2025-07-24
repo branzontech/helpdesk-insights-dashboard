@@ -70,117 +70,70 @@ const KnowledgeBaseLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-4">
+    <div className="min-h-screen">
+      {/* Simple Header */}
+      <div className="border-b">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <BookOpen className="h-8 w-8 text-primary" />
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">Base de Conocimiento</h1>
-                <p className="text-sm text-muted-foreground">
-                  Centro de información y documentación técnica
-                </p>
-              </div>
-            </div>
+            <h1 className="text-xl font-semibold">Base de Conocimiento</h1>
             
-            <div className="flex items-center space-x-2">
+            <div className="flex gap-2">
               <Button
-                variant="outline"
+                variant={currentView === 'dashboard' ? 'default' : 'ghost'}
                 onClick={() => setCurrentView('dashboard')}
-                className={currentView === 'dashboard' ? 'bg-accent' : ''}
               >
-                <TrendingUp className="h-4 w-4 mr-2" />
                 Dashboard
               </Button>
               <Button
-                variant="outline"
+                variant={currentView === 'browse' ? 'default' : 'ghost'}
                 onClick={() => setCurrentView('browse')}
-                className={currentView === 'browse' ? 'bg-accent' : ''}
               >
-                <BookOpen className="h-4 w-4 mr-2" />
-                Explorar
+                Artículos
               </Button>
               <Button onClick={handleCreateArticle}>
-                <Plus className="h-4 w-4 mr-2" />
-                Nuevo Artículo
+                Nuevo
               </Button>
             </div>
           </div>
 
-          {/* Search and filters - only show when browsing */}
+          {/* Simple search - only when browsing */}
           {currentView === 'browse' && (
-            <div className="mt-4 flex flex-col md:flex-row gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Buscar artículos, etiquetas o contenido..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
+            <div className="flex gap-3 mt-4">
+              <Input
+                placeholder="Buscar artículos..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="max-w-md"
+              />
               
-              <div className="flex items-center space-x-2">
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger className="w-48">
-                    <Filter className="h-4 w-4 mr-2" />
-                    <SelectValue placeholder="Todas las categorías" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas las categorías</SelectItem>
-                    {knowledgeBaseCategories.map((category) => (
-                      <SelectItem key={category.id} value={category.id}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Categoría" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  {knowledgeBaseCategories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-                <div className="flex border rounded-md">
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                    className="rounded-r-none"
-                  >
-                    <Grid className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                    className="rounded-l-none"
-                  >
-                    <List className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Stats bar */}
-          {currentView === 'browse' && (
-            <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
-              <div className="flex items-center space-x-4">
-                <span>{knowledgeBaseStats.publishedArticles} artículos publicados</span>
-                <span>{knowledgeBaseStats.totalViews.toLocaleString()} visualizaciones totales</span>
-                <span>Calificación promedio: {knowledgeBaseStats.averageRating}/5</span>
-              </div>
-              <Badge variant="secondary">
-                {searchQuery ? `Buscando: "${searchQuery}"` : 
-                 selectedCategory !== 'all' ? 
-                 `Categoría: ${knowledgeBaseCategories.find(c => c.id === selectedCategory)?.name}` : 
-                 'Todos los artículos'}
-              </Badge>
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+              >
+                {viewMode === 'grid' ? 'Lista' : 'Grid'}
+              </Button>
             </div>
           )}
         </div>
       </div>
 
-      {/* Main content */}
-      <div className="container mx-auto px-4 py-6">
+      {/* Content */}
+      <div className="container mx-auto px-6 py-6">
         {renderCurrentView()}
       </div>
     </div>
