@@ -48,22 +48,22 @@ const getStatusIcon = (status: string) => {
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case 'open': return 'border-l-blue-500 bg-blue-50 dark:bg-blue-950/20';
-    case 'inProgress': return 'border-l-orange-500 bg-orange-50 dark:bg-orange-950/20';
-    case 'pending': return 'border-l-yellow-500 bg-yellow-50 dark:bg-yellow-950/20';
-    case 'closed': return 'border-l-green-500 bg-green-50 dark:bg-green-950/20';
-    default: return 'border-l-gray-500 bg-gray-50 dark:bg-gray-950/20';
+    case 'open': return 'border-l-blue-500';
+    case 'inProgress': return 'border-l-orange-500';
+    case 'pending': return 'border-l-yellow-500';
+    case 'closed': return 'border-l-green-500';
+    default: return 'border-l-gray-500';
   }
 };
 
-const getPriorityColor = (priority: string) => {
-  switch (priority) {
-    case 'critical': return 'bg-red-100 text-red-800 dark:bg-red-950/20 dark:text-red-300';
-    case 'high': return 'bg-orange-100 text-orange-800 dark:bg-orange-950/20 dark:text-orange-300';
-    case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-950/20 dark:text-yellow-300';
-    case 'low': return 'bg-green-100 text-green-800 dark:bg-green-950/20 dark:text-green-300';
-    default: return 'bg-gray-100 text-gray-800 dark:bg-gray-950/20 dark:text-gray-300';
-  }
+const getPriorityBadge = (priority: string) => {
+  const colors = {
+    critical: 'bg-red-500',
+    high: 'bg-orange-500',
+    medium: 'bg-yellow-500',
+    low: 'bg-green-500'
+  };
+  return colors[priority as keyof typeof colors] || 'bg-gray-500';
 };
 
 const TicketList: React.FC<TicketListProps> = ({
@@ -101,68 +101,47 @@ const TicketList: React.FC<TicketListProps> = ({
 
   return (
     <div className="h-full flex flex-col bg-background">
-      {/* Header */}
-      <div className="p-4 border-b space-y-4">
+      {/* Minimalist Header */}
+      <div className="p-4 border-b space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Support Tickets</h2>
-          <Button variant="outline" size="sm">
-            <SortDesc className="h-4 w-4 mr-2" />
-            Sort
-          </Button>
+          <h2 className="text-base font-medium">Tickets</h2>
+          <div className="text-sm text-muted-foreground">
+            {tickets.length}
+          </div>
         </div>
 
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search tickets, customers, or IDs..."
+            placeholder="Search tickets..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10"
+            className="pl-10 h-9"
           />
         </div>
 
-        {/* Filters */}
+        {/* Compact Filters */}
         <div className="flex space-x-2">
           <Select value={statusFilter} onValueChange={onStatusFilterChange}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
+            <SelectTrigger className="w-24 h-8 text-xs">
+              <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="open">
-                <div className="flex items-center space-x-2">
-                  <AlertCircle className="h-4 w-4 text-blue-500" />
-                  <span>Open ({statusCounts.open || 0})</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="inProgress">
-                <div className="flex items-center space-x-2">
-                  <Clock className="h-4 w-4 text-orange-500" />
-                  <span>In Progress ({statusCounts.inProgress || 0})</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="pending">
-                <div className="flex items-center space-x-2">
-                  <Pause className="h-4 w-4 text-yellow-500" />
-                  <span>Pending ({statusCounts.pending || 0})</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="closed">
-                <div className="flex items-center space-x-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-500" />
-                  <span>Closed ({statusCounts.closed || 0})</span>
-                </div>
-              </SelectItem>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="open">Open</SelectItem>
+              <SelectItem value="inProgress">Active</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="closed">Closed</SelectItem>
             </SelectContent>
           </Select>
 
           <Select value={priorityFilter} onValueChange={onPriorityFilterChange}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
+            <SelectTrigger className="w-24 h-8 text-xs">
+              <SelectValue placeholder="Priority" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Priority</SelectItem>
+              <SelectItem value="all">All</SelectItem>
               <SelectItem value="critical">Critical</SelectItem>
               <SelectItem value="high">High</SelectItem>
               <SelectItem value="medium">Medium</SelectItem>
@@ -170,25 +149,24 @@ const TicketList: React.FC<TicketListProps> = ({
             </SelectContent>
           </Select>
 
-          <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="updated">Updated</SelectItem>
-              <SelectItem value="created">Created</SelectItem>
-              <SelectItem value="priority">Priority</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="flex space-x-4 text-sm text-muted-foreground">
-          <span>{tickets.length} tickets</span>
-          <span>•</span>
-          <span>{statusCounts.open || 0} open</span>
-          <span>•</span>
-          <span>{statusCounts.inProgress || 0} in progress</span>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 px-2">
+                <SortDesc className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setSortBy('updated')}>
+                Recently Updated
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortBy('created')}>
+                Recently Created
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortBy('priority')}>
+                Priority
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 
@@ -205,117 +183,73 @@ const TicketList: React.FC<TicketListProps> = ({
             sortedTickets.map((ticket) => (
               <Card
                 key={ticket.id}
-                className={`cursor-pointer transition-all duration-200 hover:shadow-md border-l-4 ${
+                className={`cursor-pointer transition-all duration-200 hover:shadow-sm border-l-4 group ${
                   selectedTicketId === ticket.id 
-                    ? 'ring-2 ring-primary ring-offset-2' 
+                    ? 'ring-1 ring-primary' 
                     : ''
                 } ${getStatusColor(ticket.status)}`}
                 onClick={() => onTicketSelect(ticket.id)}
               >
-                <CardContent className="p-4">
-                  <div className="space-y-3">
-                    {/* Header */}
+                <CardContent className="p-3">
+                  <div className="space-y-2">
+                    {/* Header - Simplified */}
                     <div className="flex items-start justify-between">
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(ticket.status)}
+                      <div className="flex items-center space-x-2 min-w-0 flex-1">
+                        <div className={`w-2 h-2 rounded-full ${getPriorityBadge(ticket.priority)}`} />
                         <span className="text-xs font-mono text-muted-foreground">
-                          {ticket.id}
+                          #{ticket.id}
                         </span>
-                        <Badge 
-                          variant="secondary" 
-                          className={`text-xs ${getPriorityColor(ticket.priority)}`}
-                        >
-                          {ticket.priority}
-                        </Badge>
+                        <div className="text-xs text-muted-foreground">
+                          {formatDistanceToNow(new Date(ticket.updatedAt), { addSuffix: true })}
+                        </div>
                       </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button 
                             variant="ghost" 
                             size="sm" 
-                            className="h-6 w-6 p-0"
+                            className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <MoreVertical className="h-4 w-4" />
+                            <MoreVertical className="h-3 w-3" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem>View Details</DropdownMenuItem>
                           <DropdownMenuItem>Assign Agent</DropdownMenuItem>
                           <DropdownMenuItem>Change Priority</DropdownMenuItem>
-                          <DropdownMenuItem>Add to Favorites</DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
 
                     {/* Title */}
-                    <h3 className="font-medium text-sm leading-tight line-clamp-2">
+                    <h3 className="font-medium text-sm leading-tight line-clamp-2 pr-2">
                       {ticket.title}
                     </h3>
 
-                    {/* Customer Info */}
-                    <div className="flex items-center space-x-2">
-                      <Avatar className="h-6 w-6">
-                        <AvatarImage src={ticket.customer.avatar} />
-                        <AvatarFallback className="text-xs">
-                          {ticket.customer.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs font-medium truncate">
+                    {/* Customer Info - Compact */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2 min-w-0 flex-1">
+                        <Avatar className="h-5 w-5">
+                          <AvatarImage src={ticket.customer.avatar} />
+                          <AvatarFallback className="text-xs">
+                            {ticket.customer.name.split(' ').map(n => n[0]).join('')}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="text-xs text-muted-foreground truncate">
                           {ticket.customer.name}
                         </div>
-                        <div className="text-xs text-muted-foreground truncate">
-                          {ticket.customer.email}
-                        </div>
                       </div>
-                    </div>
-
-                    {/* Tags */}
-                    {ticket.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {ticket.tags.slice(0, 3).map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs px-1 py-0">
-                            <TagIcon className="h-2 w-2 mr-1" />
-                            {tag}
-                          </Badge>
-                        ))}
-                        {ticket.tags.length > 3 && (
-                          <Badge variant="outline" className="text-xs px-1 py-0">
-                            +{ticket.tags.length - 3}
-                          </Badge>
+                      
+                      <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                        {ticket.messages.length > 0 && (
+                          <span>{ticket.messages.length}</span>
                         )}
-                      </div>
-                    )}
-
-                    {/* Footer */}
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-3 w-3" />
-                        <span>{formatDistanceToNow(new Date(ticket.updatedAt), { addSuffix: true })}</span>
-                      </div>
-                      
-                      {ticket.assignedAgent && (
-                        <div className="flex items-center space-x-1">
-                          <User className="h-3 w-3" />
-                          <span>{ticket.assignedAgent.name}</span>
-                        </div>
-                      )}
-                      
-                      <div className="flex items-center space-x-1">
-                        <span>{ticket.messages.length}</span>
-                        <span>replies</span>
+                        {getStatusIcon(ticket.status)}
                       </div>
                     </div>
 
-                    {/* SLA Warning */}
-                    {ticket.sla?.status === 'warning' && (
-                      <div className="flex items-center space-x-1 text-xs text-orange-600 bg-orange-50 dark:bg-orange-950/20 px-2 py-1 rounded">
-                        <AlertCircle className="h-3 w-3" />
-                        <span>SLA Warning</span>
-                      </div>
-                    )}
-                    
+                    {/* SLA Warning - Only if critical */}
                     {ticket.sla?.status === 'breached' && (
                       <div className="flex items-center space-x-1 text-xs text-red-600 bg-red-50 dark:bg-red-950/20 px-2 py-1 rounded">
                         <AlertCircle className="h-3 w-3" />
