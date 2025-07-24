@@ -15,7 +15,8 @@ import {
   History,
   Eye,
   EyeOff,
-  BarChart3
+  BarChart3,
+  UserPlus
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -41,6 +42,7 @@ interface TicketListProps {
   onPriorityFilterChange: (priority: string) => void;
   showHistory?: boolean;
   onShowHistoryChange?: (show: boolean) => void;
+  onAssignAgent?: (ticketId: string) => void;
 }
 
 const getStatusIcon = (status: string) => {
@@ -94,7 +96,8 @@ const TicketList: React.FC<TicketListProps> = ({
   priorityFilter,
   onPriorityFilterChange,
   showHistory,
-  onShowHistoryChange
+  onShowHistoryChange,
+  onAssignAgent
 }) => {
   const [sortBy, setSortBy] = useState<'created' | 'updated' | 'priority'>('updated');
   const [showStats, setShowStats] = useState<boolean>(false);
@@ -373,11 +376,27 @@ const TicketList: React.FC<TicketListProps> = ({
                         </div>
                       </div>
                       
-                      <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                        {ticket.messages.length > 0 && (
-                          <span>{ticket.messages.length}</span>
-                        )}
-                        {getStatusIcon(ticket.status)}
+                      <div className="flex items-center space-x-2">
+                        {/* Assign Agent Button */}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onAssignAgent?.(ticket.id);
+                          }}
+                          title="Asignar agente"
+                        >
+                          <UserPlus className="h-3 w-3" />
+                        </Button>
+                        
+                        <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                          {ticket.messages.length > 0 && (
+                            <span>{ticket.messages.length}</span>
+                          )}
+                          {getStatusIcon(ticket.status)}
+                        </div>
                       </div>
                     </div>
 

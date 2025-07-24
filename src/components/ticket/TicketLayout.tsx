@@ -79,6 +79,10 @@ const TicketLayout = () => {
               onPriorityFilterChange={setPriorityFilter}
               showHistory={showHistory}
               onShowHistoryChange={setShowHistory}
+              onAssignAgent={(ticketId) => {
+                // TODO: Implementar lógica de asignación de agente
+                console.log('Asignar agente a ticket:', ticketId);
+              }}
             />
           </Panel>
           
