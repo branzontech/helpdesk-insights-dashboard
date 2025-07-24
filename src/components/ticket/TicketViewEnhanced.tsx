@@ -133,98 +133,60 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
 
   return (
     <div className="h-full bg-background flex flex-col">
-      {/* Enhanced Header */}
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex h-16 items-center justify-between px-6">
-          <div className="flex items-center space-x-4 flex-1">
-            <div className="flex flex-col">
-              {isEditing ? (
-                <div className="flex items-center space-x-2">
-                  <Input
-                    value={editedTitle}
-                    onChange={(e) => setEditedTitle(e.target.value)}
-                    className="text-lg font-semibold"
-                    onKeyDown={(e) => e.key === 'Enter' && handleTitleSave()}
-                    autoFocus
-                  />
-                  <Button size="sm" onClick={handleTitleSave}>Save</Button>
-                  <Button size="sm" variant="outline" onClick={() => setIsEditing(false)}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <h1 className="text-xl font-semibold truncate">{ticket.title}</h1>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={() => setIsEditing(true)}
-                    className="h-6 w-6 p-0"
-                  >
-                    <Edit className="h-3 w-3" />
-                  </Button>
-                </div>
-              )}
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <span className="font-mono">{ticket.id}</span>
-                <span>•</span>
-                <span>Created {format(new Date(ticket.createdAt), 'MMM dd, yyyy')}</span>
-                <span>•</span>
-                <span>Updated {formatDistanceToNow(new Date(ticket.updatedAt), { addSuffix: true })}</span>
+      {/* Minimalist Header */}
+      <div className="border-b bg-background">
+        <div className="flex h-14 items-center justify-between px-6">
+          <div className="flex items-center space-x-3 flex-1">
+            {isEditing ? (
+              <div className="flex items-center space-x-2">
+                <Input
+                  value={editedTitle}
+                  onChange={(e) => setEditedTitle(e.target.value)}
+                  className="text-lg font-medium"
+                  onKeyDown={(e) => e.key === 'Enter' && handleTitleSave()}
+                  autoFocus
+                />
+                <Button size="sm" onClick={handleTitleSave}>Save</Button>
+                <Button size="sm" variant="ghost" onClick={() => setIsEditing(false)}>
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
-            </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <h1 className="text-lg font-medium truncate max-w-md">{ticket.title}</h1>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setIsEditing(true)}
+                  className="h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Edit className="h-3 w-3" />
+                </Button>
+              </div>
+            )}
+            <div className="text-xs text-muted-foreground font-mono">#{ticket.id}</div>
           </div>
           
           <div className="flex items-center space-x-2">
-            {/* Status Dropdown */}
-            <Select value={ticket.status} onValueChange={handleStatusChange}>
-              <SelectTrigger className="w-32">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="open">Open</SelectItem>
-                <SelectItem value="inProgress">In Progress</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="closed">Closed</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {/* Priority Dropdown */}
-            <Select value={ticket.priority} onValueChange={handlePriorityChange}>
-              <SelectTrigger className="w-24">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="critical">Critical</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setShowPrivateNotes(!showPrivateNotes)}
-                  className={showPrivateNotes ? 'bg-muted' : ''}
-                >
-                  {showPrivateNotes ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                {showPrivateNotes ? 'Hide private notes' : 'Show private notes'}
-              </TooltipContent>
-            </Tooltip>
+            <Badge variant={getPriorityColor(ticket.priority)} className="capitalize text-xs">
+              {ticket.priority}
+            </Badge>
+            <Badge variant={getStatusColor(ticket.status)} className="capitalize text-xs">
+              {ticket.status.replace(/([A-Z])/g, ' $1').trim()}
+            </Badge>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm">
+                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setShowPrivateNotes(!showPrivateNotes)}>
+                  {showPrivateNotes ? <EyeOff className="mr-2 h-4 w-4" /> : <Eye className="mr-2 h-4 w-4" />}
+                  {showPrivateNotes ? 'Hide private notes' : 'Show private notes'}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem>
                   <UserPlus className="mr-2 h-4 w-4" />
                   Assign Agent
@@ -250,82 +212,26 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
             </DropdownMenu>
           </div>
         </div>
-
-        {/* Quick Info Bar */}
-        <div className="px-6 pb-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-2">
-                <Badge variant={getPriorityColor(ticket.priority)} className="capitalize">
-                  <Flag className="h-3 w-3 mr-1" />
-                  {ticket.priority}
-                </Badge>
-                <Badge variant={getStatusColor(ticket.status)} className="capitalize">
-                  {ticket.status.replace(/([A-Z])/g, ' $1').trim()}
-                </Badge>
-              </div>
-              
-              <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                <User className="h-4 w-4" />
-                <span>{ticket.customer.name}</span>
-              </div>
-              
-              <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                <Building className="h-4 w-4" />
-                <span>{ticket.category}</span>
-              </div>
-            </div>
-
-            {/* SLA Progress */}
-            {ticket.sla && (
-              <div className="flex items-center space-x-3">
-                <div className="text-sm">
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-2 h-2 rounded-full ${slaStatus.color}`} />
-                    <span className="text-xs font-medium">{slaStatus.text}</span>
-                  </div>
-                  <Progress value={slaStatus.progress} className="w-24 h-1 mt-1" />
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {ticket.sla.resolutionTime}min target
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Tags */}
-          {ticket.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-3">
-              {ticket.tags.map((tag, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  <Tag className="h-3 w-3 mr-1" />
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          )}
-        </div>
       </div>
 
-      {/* Main Content with Tabs */}
+      {/* Main Content with Minimalist Tabs */}
       <div className="flex-1 overflow-hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-          <div className="px-6 pt-4">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="conversation" className="flex items-center space-x-2">
-                <MessageSquare className="h-4 w-4" />
-                <span>Conversation</span>
-                <Badge variant="secondary" className="ml-1 text-xs">
-                  {filteredMessages.length}
-                </Badge>
+          <div className="px-6 py-3 border-b">
+            <TabsList className="grid w-full max-w-md grid-cols-3 h-9">
+              <TabsTrigger value="conversation" className="text-sm data-[state=active]:shadow-none">
+                Conversation
+                {filteredMessages.length > 0 && (
+                  <span className="ml-1.5 text-xs text-muted-foreground">
+                    {filteredMessages.length}
+                  </span>
+                )}
               </TabsTrigger>
-              <TabsTrigger value="details" className="flex items-center space-x-2">
-                <FileText className="h-4 w-4" />
-                <span>Details</span>
+              <TabsTrigger value="details" className="text-sm data-[state=active]:shadow-none">
+                Details
               </TabsTrigger>
-              <TabsTrigger value="activity" className="flex items-center space-x-2">
-                <Activity className="h-4 w-4" />
-                <span>Activity</span>
+              <TabsTrigger value="activity" className="text-sm data-[state=active]:shadow-none">
+                Activity
               </TabsTrigger>
             </TabsList>
           </div>
@@ -342,49 +248,25 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
                 </div>
               </ScrollArea>
 
-              {/* Enhanced Reply Box */}
+              {/* Minimalist Reply Box */}
               <div className="border-t bg-background p-6">
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Select value={replyType} onValueChange={(value: 'public' | 'private') => setReplyType(value)}>
-                        <SelectTrigger className="w-40">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="public">
-                            <div className="flex items-center">
-                              <MessageSquare className="h-4 w-4 mr-2" />
-                              Public Reply
-                            </div>
-                          </SelectItem>
-                          <SelectItem value="private">
-                            <div className="flex items-center">
-                              <Eye className="h-4 w-4 mr-2" />
-                              Private Note
-                            </div>
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    <Select value={replyType} onValueChange={(value: 'public' | 'private') => setReplyType(value)}>
+                      <SelectTrigger className="w-36 h-8">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="public">Public Reply</SelectItem>
+                        <SelectItem value="private">Private Note</SelectItem>
+                      </SelectContent>
+                    </Select>
                     
-                    <div className="flex items-center space-x-2">
-                      <Button variant="outline" size="sm">
-                        <Bold className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Italic className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <List className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Link className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
+                    <div className="flex items-center space-x-1">
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                         <Paperclip className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                         <Smile className="h-4 w-4" />
                       </Button>
                     </div>
@@ -394,7 +276,7 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
                     placeholder={replyType === 'private' ? 'Add a private note...' : 'Type your reply...'}
                     value={replyContent}
                     onChange={(e) => setReplyContent(e.target.value)}
-                    className="min-h-[120px] resize-none"
+                    className="min-h-[100px] resize-none border-0 focus-visible:ring-1 bg-muted/30"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                         handleSendReply();
@@ -404,21 +286,16 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
                   
                   <div className="flex justify-between items-center">
                     <div className="text-xs text-muted-foreground">
-                      {replyType === 'private' ? 'This note will only be visible to agents' : 'This reply will be sent to the customer'} • Ctrl+Enter to send
+                      Ctrl+Enter to send
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <Button variant="outline" disabled={!replyContent.trim()}>
-                        Save as Draft
-                      </Button>
-                      <Button 
-                        onClick={handleSendReply} 
-                        disabled={!replyContent.trim()}
-                        className="min-w-[100px]"
-                      >
-                        <Send className="h-4 w-4 mr-2" />
-                        Send
-                      </Button>
-                    </div>
+                    <Button 
+                      onClick={handleSendReply} 
+                      disabled={!replyContent.trim()}
+                      size="sm"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Send
+                    </Button>
                   </div>
                 </div>
               </div>
