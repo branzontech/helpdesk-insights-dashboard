@@ -1,5 +1,6 @@
-import { ParameterCard } from "./ParameterCard";
+import { ParameterRow } from "./ParameterRow";
 import { ParameterItem } from "@/types/parameters";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ParametersGridProps {
   parameters: ParameterItem[];
@@ -20,10 +21,17 @@ export const ParametersGrid = ({ parameters }: ParametersGridProps) => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {parameters.map((parameter) => (
-        <ParameterCard key={parameter.id} parameter={parameter} />
-      ))}
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg">Funcionalidades del Sistema</CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="divide-y divide-border">
+          {parameters.map((parameter) => (
+            <ParameterRow key={parameter.id} parameter={parameter} />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
