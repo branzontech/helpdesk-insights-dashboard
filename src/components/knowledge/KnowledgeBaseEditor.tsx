@@ -135,10 +135,24 @@ const KnowledgeBaseEditor: React.FC<KnowledgeBaseEditorProps> = ({
     return content
       // Imágenes
       .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg my-4" />')
-      // Bloques de código
-      .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre class="bg-muted p-4 rounded-lg overflow-x-auto my-4"><code class="text-sm font-mono">$2</code></pre>')
+      // Bloques de código con mejor estilo
+      .replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
+        const language = lang || 'text';
+        const trimmedCode = code.trim();
+        return `<div class="code-block-container my-6">
+          <div class="code-block-header bg-slate-800 text-slate-300 px-4 py-2 text-sm font-mono rounded-t-lg border-b border-slate-600">
+            <span class="text-blue-400">${language}</span>
+          </div>
+          <pre class="bg-slate-900 text-slate-100 p-4 rounded-b-lg overflow-x-auto m-0 border border-slate-700"><code class="text-sm font-mono language-${language}">${trimmedCode
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;')}</code></pre>
+        </div>`;
+      })
       // Código inline
-      .replace(/`([^`]+)`/g, '<code class="bg-muted px-2 py-1 rounded text-sm font-mono">$1</code>')
+      .replace(/`([^`]+)`/g, '<code class="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-2 py-1 rounded text-sm font-mono">$1</code>')
       // Encabezados
       .replace(/^### (.+)$/gm, '<h3 class="text-lg font-semibold mt-6 mb-3">$1</h3>')
       .replace(/^## (.+)$/gm, '<h2 class="text-xl font-semibold mt-8 mb-4">$1</h2>')
