@@ -134,35 +134,38 @@ const KnowledgeBaseEditor: React.FC<KnowledgeBaseEditorProps> = ({
   const renderMarkdownToHtml = (content: string) => {
     return content
       // Imágenes
-      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg my-4" />')
+      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg my-4 border border-border" />')
       // Bloques de código con mejor estilo
       .replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
         const language = lang || 'text';
         const trimmedCode = code.trim();
-        return `<div class="code-block-container my-6">
-          <div class="code-block-header bg-slate-800 text-slate-300 px-4 py-2 text-sm font-mono rounded-t-lg border-b border-slate-600">
-            <span class="text-blue-400">${language}</span>
+        const escapedCode = trimmedCode
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+        
+        return `<div class="code-block-container my-6 rounded-lg overflow-hidden border border-slate-600">
+          <div class="code-block-header px-4 py-2 text-sm font-mono flex items-center justify-between" style="background-color: #334155; color: #94a3b8;">
+            <span class="font-semibold" style="color: #60a5fa;">${language}</span>
+            <span class="text-xs" style="color: #94a3b8;">Código</span>
           </div>
-          <pre class="bg-slate-900 text-slate-100 p-4 rounded-b-lg overflow-x-auto m-0 border border-slate-700"><code class="text-sm font-mono language-${language}">${trimmedCode
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;')}</code></pre>
+          <pre class="m-0 p-4 overflow-x-auto" style="background-color: #0f172a; color: #e2e8f0;"><code class="text-sm font-mono">${escapedCode}</code></pre>
         </div>`;
       })
       // Código inline
-      .replace(/`([^`]+)`/g, '<code class="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-2 py-1 rounded text-sm font-mono">$1</code>')
+      .replace(/`([^`]+)`/g, '<code class="px-2 py-1 rounded text-sm font-mono" style="background-color: #f1f5f9; color: #374151;">$1</code>')
       // Encabezados
-      .replace(/^### (.+)$/gm, '<h3 class="text-lg font-semibold mt-6 mb-3">$1</h3>')
-      .replace(/^## (.+)$/gm, '<h2 class="text-xl font-semibold mt-8 mb-4">$1</h2>')
-      .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold mt-8 mb-4">$1</h1>')
+      .replace(/^### (.+)$/gm, '<h3 class="text-lg font-semibold mt-6 mb-3 text-foreground">$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2 class="text-xl font-semibold mt-8 mb-4 text-foreground">$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold mt-8 mb-4 text-foreground">$1</h1>')
       // Texto en negrita
-      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold">$1</strong>')
       // Texto en cursiva
-      .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+      .replace(/\*([^*]+)\*/g, '<em class="italic">$1</em>')
       // Enlaces
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary underline">$1</a>')
+      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" class="text-primary underline hover:text-primary/80">$1</a>')
       // Saltos de línea
       .replace(/\n/g, '<br>');
   };
