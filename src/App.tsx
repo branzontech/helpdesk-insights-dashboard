@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import TicketLayout from "./components/ticket/TicketLayout";
 import KnowledgeBaseLayout from "./components/knowledge/KnowledgeBaseLayout";
+import ParametersLayout from "./components/parameters/ParametersLayout";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/tickets" element={<TicketLayout />} />
           <Route path="/ticket/:id" element={<TicketLayout />} />
           <Route path="/knowledge" element={<KnowledgeBaseLayout />} />
+          <Route path="/parameters" element={<ParametersLayout />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
