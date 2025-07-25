@@ -8,26 +8,34 @@ import { Badge } from "@/components/ui/badge";
 import { ParametersGrid } from "./ParametersGrid";
 import { ParametersHeader } from "./ParametersHeader";
 import { ParametersFilter } from "./ParametersFilter";
+import { ModuleSegmentation } from "./ModuleSegmentation";
 import { useParametersData } from "@/hooks/useParametersData";
 
 const ParametersLayout = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedModule, setSelectedModule] = useState("all");
   
-  const { categories, filteredParameters, stats } = useParametersData({
+  const { categories, modules, filteredParameters, stats } = useParametersData({
     searchTerm,
     selectedCategory,
-    selectedStatus
+    selectedStatus,
+    selectedModule
   });
 
   return (
     <div className="min-h-screen bg-background">
       <ParametersHeader />
+      <ModuleSegmentation
+        modules={modules}
+        selectedModule={selectedModule}
+        onModuleChange={setSelectedModule}
+      />
       
-      <div className="container mx-auto px-6 py-8">
+      <div className="container mx-auto px-6 py-6">
         {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card>
             <CardHeader className="pb-2">
               <CardDescription>Total Funcionalidades</CardDescription>
@@ -63,8 +71,8 @@ const ParametersLayout = () => {
         </div>
 
         {/* Search and Filters */}
-        <Card className="mb-8">
-          <CardContent className="p-6">
+        <Card className="mb-6">
+          <CardContent className="p-4">
             <div className="flex flex-col lg:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
