@@ -17,7 +17,7 @@ const ParametersLayout = () => {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedModule, setSelectedModule] = useState("all");
   
-  const { categories, modules, filteredParameters, stats } = useParametersData({
+  const { categories, modules, filteredParameters } = useParametersData({
     searchTerm,
     selectedCategory,
     selectedStatus,
@@ -34,42 +34,6 @@ const ParametersLayout = () => {
       />
       
       <div className="container mx-auto px-6 py-6">
-        {/* Statistics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Total Funcionalidades</CardDescription>
-              <CardTitle className="text-3xl font-bold text-primary">
-                {stats.total}
-              </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Habilitadas</CardDescription>
-              <CardTitle className="text-3xl font-bold text-green-600">
-                {stats.enabled}
-              </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Deshabilitadas</CardDescription>
-              <CardTitle className="text-3xl font-bold text-orange-600">
-                {stats.disabled}
-              </CardTitle>
-            </CardHeader>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Categorías</CardDescription>
-              <CardTitle className="text-3xl font-bold text-blue-600">
-                {categories.length}
-              </CardTitle>
-            </CardHeader>
-          </Card>
-        </div>
-
         {/* Search and Filters */}
         <Card className="mb-6">
           <CardContent className="p-4">

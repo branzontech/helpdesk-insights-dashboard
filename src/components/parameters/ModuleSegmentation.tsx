@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import * as LucideIcons from "lucide-react";
 import { ParameterModule } from "@/types/parameters";
 
 interface ModuleSegmentationProps {
@@ -27,20 +28,23 @@ export const ModuleSegmentation = ({
             Todos los Módulos
           </button>
           
-          {modules.map((module) => (
-            <button
-              key={module.id}
-              onClick={() => onModuleChange(module.id)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
-                selectedModule === module.id
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground"
-              }`}
-            >
-              <span className="text-base">{module.icon}</span>
-              <span>{module.name}</span>
-            </button>
-          ))}
+          {modules.map((module) => {
+            const IconComponent = (LucideIcons as any)[module.icon];
+            return (
+              <button
+                key={module.id}
+                onClick={() => onModuleChange(module.id)}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap ${
+                  selectedModule === module.id
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {IconComponent && <IconComponent className="h-4 w-4" />}
+                <span>{module.name}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
