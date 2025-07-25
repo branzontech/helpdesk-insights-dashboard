@@ -127,6 +127,506 @@ export const knowledgeBaseCategories: KnowledgeBaseCategory[] = [
 // Datos de muestra para artículos
 export const knowledgeBaseArticles: KnowledgeBaseArticle[] = [
   {
+    id: "kb-demo-001",
+    title: "Guía completa para crear APIs REST con Node.js y Express",
+    content: `# Guía completa para crear APIs REST con Node.js y Express
+
+## Introducción
+
+En esta guía aprenderás a crear una **API REST** completa utilizando Node.js y Express. Cubriremos desde la configuración inicial hasta la implementación de endpoints y manejo de errores.
+
+![Desarrollo web con Node.js](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDYwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMjEzNTQ3Ii8+Cjx0ZXh0IHg9IjMwMCIgeT0iMTUwIiBmaWxsPSIjRkZGRkZGIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiPk5vZGUuanMgKyBFeHByZXNzIEFQSTwvdGV4dD4KPHN2ZyB4PSIyNTAiIHk9IjEwMCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIGZpbGw9IiM2OGQ0NTEiPgo8cGF0aCBkPSJNMTEuOTk4IDI0Yy0uMzIxIDAtLjY0MS0uMDgzLS45MjItLjI0N2wtMi45MzYtMS43MzdjLS40MzgtLjI0NS0uMjI0LS4zMy0uMDgtLjM4LjU4NS0uMjAzIDEuMDA3LS41OTEgMS4wMDctMS4wOTggMC0uNDA3LS40MjYtLjc5NS0uOTUtLjc5NWgtMy4wMDNjLS41MjQgMC0uOTUuMzg4LS45NS43OTUgMCAuNTA3LjQyMi44OTUgMS4wMDcgMS4wOTguMTQ0LjA1LjM1OC4xMzUtLjA4LjM4bC0yLjkzNiAxLjczN2MtLjI4MS4xNjQtLjYwMS4yNDctLjkyMi4yNDdzLS42NDEtLjA4My0uOTIyLS4yNDdsLTcuNjQxLTQuNTI2Yy0uNTY5LS4zMzctLjkyMi0uOTU2LS45MjItMS42MjV2LTkuMDUyYzAtLjY2OS4zNTMtMS4yODguOTIyLTEuNjI1bDcuNjQxLTQuNTI2Yy0uMjgxLS4xNjQtLjYwMS0uMjQ3LS45MjItLjI0N3ptLTQuOTA4IDguNzQ4Yy0uNDc0IDAtLjg1OS4zODUtLjg1OS44NTlzLjM4NS44NTkuODU5Ljg1OS44NTktLjM4NS44NTktLjg1OS0uMzg1LS44NTktLjg1OS0uODU5em0yLjk0MyAwYy0uNDc0IDAtLjg1OS4zODUtLjg1OS44NTlzLjM4NS44NTkuODU5Ljg1OS44NTktLjM4NS44NTktLjg1OS0uMzg1LS44NTktLjg1OS0uODU5eiIvPgo8L3N2Zz4KPC9zdmc+)
+
+## Requisitos previos
+
+Antes de comenzar, asegúrate de tener instalado:
+
+- **Node.js** (versión 14 o superior)
+- **npm** o **yarn** como gestor de paquetes
+- Un editor de código (recomendado: VS Code)
+- Conocimientos básicos de JavaScript
+
+## Configuración inicial del proyecto
+
+### 1. Crear el proyecto
+
+\`\`\`bash
+# Crear directorio del proyecto
+mkdir api-rest-ejemplo
+cd api-rest-ejemplo
+
+# Inicializar proyecto Node.js
+npm init -y
+
+# Instalar dependencias principales
+npm install express cors helmet dotenv
+
+# Instalar dependencias de desarrollo
+npm install --save-dev nodemon
+\`\`\`
+
+### 2. Estructura de carpetas
+
+Organiza tu proyecto con la siguiente estructura:
+
+\`\`\`text
+api-rest-ejemplo/
+├── src/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   └── utils/
+├── .env
+├── .gitignore
+├── package.json
+└── server.js
+\`\`\`
+
+## Configuración del servidor Express
+
+### Archivo principal (server.js)
+
+\`\`\`javascript
+const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware de seguridad
+app.use(helmet());
+
+// Configurar CORS
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*',
+  credentials: true
+}));
+
+// Middleware para parsear JSON
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// Middleware de logging
+app.use((req, res, next) => {
+  console.log(\`\${new Date().toISOString()} - \${req.method} \${req.path}\`);
+  next();
+});
+
+// Rutas
+app.use('/api/users', require('./src/routes/users'));
+app.use('/api/products', require('./src/routes/products'));
+
+// Ruta de salud
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'OK',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
+// Middleware de manejo de errores
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    error: 'Algo salió mal!',
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
+
+// Iniciar servidor
+app.listen(PORT, () => {
+  console.log(\`🚀 Servidor ejecutándose en puerto \${PORT}\`);
+  console.log(\`📡 Entorno: \${process.env.NODE_ENV || 'development'}\`);
+});
+\`\`\`
+
+## Creación de rutas y controladores
+
+### Archivo de rutas (src/routes/users.js)
+
+\`\`\`javascript
+const express = require('express');
+const router = express.Router();
+const userController = require('../controllers/userController');
+const { validateUser } = require('../middleware/validation');
+
+// GET /api/users - Obtener todos los usuarios
+router.get('/', userController.getAllUsers);
+
+// GET /api/users/:id - Obtener usuario por ID
+router.get('/:id', userController.getUserById);
+
+// POST /api/users - Crear nuevo usuario
+router.post('/', validateUser, userController.createUser);
+
+// PUT /api/users/:id - Actualizar usuario
+router.put('/:id', validateUser, userController.updateUser);
+
+// DELETE /api/users/:id - Eliminar usuario
+router.delete('/:id', userController.deleteUser);
+
+module.exports = router;
+\`\`\`
+
+### Controlador (src/controllers/userController.js)
+
+\`\`\`javascript
+// Simulamos una base de datos en memoria
+let users = [
+  { id: 1, name: 'Juan Pérez', email: 'juan@ejemplo.com', age: 30 },
+  { id: 2, name: 'María García', email: 'maria@ejemplo.com', age: 25 },
+  { id: 3, name: 'Carlos López', email: 'carlos@ejemplo.com', age: 35 }
+];
+
+const userController = {
+  // Obtener todos los usuarios
+  getAllUsers: (req, res) => {
+    try {
+      const { page = 1, limit = 10 } = req.query;
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + parseInt(limit);
+      
+      const paginatedUsers = users.slice(startIndex, endIndex);
+      
+      res.status(200).json({
+        success: true,
+        data: paginatedUsers,
+        pagination: {
+          current: parseInt(page),
+          pages: Math.ceil(users.length / limit),
+          total: users.length
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Obtener usuario por ID
+  getUserById: (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = users.find(u => u.id === parseInt(id));
+      
+      if (!user) {
+        return res.status(404).json({
+          success: false,
+          error: 'Usuario no encontrado'
+        });
+      }
+      
+      res.status(200).json({
+        success: true,
+        data: user
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Crear nuevo usuario
+  createUser: (req, res) => {
+    try {
+      const { name, email, age } = req.body;
+      
+      // Verificar si el email ya existe
+      const existingUser = users.find(u => u.email === email);
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          error: 'El email ya está registrado'
+        });
+      }
+      
+      const newUser = {
+        id: Math.max(...users.map(u => u.id), 0) + 1,
+        name,
+        email,
+        age: parseInt(age)
+      };
+      
+      users.push(newUser);
+      
+      res.status(201).json({
+        success: true,
+        data: newUser,
+        message: 'Usuario creado exitosamente'
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Actualizar usuario
+  updateUser: (req, res) => {
+    try {
+      const { id } = req.params;
+      const { name, email, age } = req.body;
+      
+      const userIndex = users.findIndex(u => u.id === parseInt(id));
+      if (userIndex === -1) {
+        return res.status(404).json({
+          success: false,
+          error: 'Usuario no encontrado'
+        });
+      }
+      
+      users[userIndex] = {
+        ...users[userIndex],
+        name: name || users[userIndex].name,
+        email: email || users[userIndex].email,
+        age: age ? parseInt(age) : users[userIndex].age
+      };
+      
+      res.status(200).json({
+        success: true,
+        data: users[userIndex],
+        message: 'Usuario actualizado exitosamente'
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  },
+
+  // Eliminar usuario
+  deleteUser: (req, res) => {
+    try {
+      const { id } = req.params;
+      const userIndex = users.findIndex(u => u.id === parseInt(id));
+      
+      if (userIndex === -1) {
+        return res.status(404).json({
+          success: false,
+          error: 'Usuario no encontrado'
+        });
+      }
+      
+      const deletedUser = users.splice(userIndex, 1)[0];
+      
+      res.status(200).json({
+        success: true,
+        data: deletedUser,
+        message: 'Usuario eliminado exitosamente'
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  }
+};
+
+module.exports = userController;
+\`\`\`
+
+## Middleware de validación
+
+### Archivo de validación (src/middleware/validation.js)
+
+\`\`\`javascript
+const validateUser = (req, res, next) => {
+  const { name, email, age } = req.body;
+  const errors = [];
+
+  // Validar nombre
+  if (!name || typeof name !== 'string' || name.trim().length < 2) {
+    errors.push('El nombre es requerido y debe tener al menos 2 caracteres');
+  }
+
+  // Validar email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    errors.push('El email debe tener un formato válido');
+  }
+
+  // Validar edad
+  if (!age || isNaN(age) || parseInt(age) < 0 || parseInt(age) > 120) {
+    errors.push('La edad debe ser un número entre 0 y 120');
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      success: false,
+      error: 'Datos de entrada inválidos',
+      details: errors
+    });
+  }
+
+  next();
+};
+
+module.exports = {
+  validateUser
+};
+\`\`\`
+
+## Configuración de variables de entorno
+
+### Archivo .env
+
+\`\`\`env
+NODE_ENV=development
+PORT=3000
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:3001
+API_VERSION=v1
+\`\`\`
+
+## Scripts de desarrollo
+
+### Actualizar package.json
+
+\`\`\`json
+{
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "test": "echo \\"Error: no test specified\\" && exit 1"
+  }
+}
+\`\`\`
+
+## Probando la API
+
+### Ejemplos con curl
+
+\`\`\`bash
+# Obtener todos los usuarios
+curl -X GET http://localhost:3000/api/users
+
+# Obtener usuario por ID
+curl -X GET http://localhost:3000/api/users/1
+
+# Crear un nuevo usuario
+curl -X POST http://localhost:3000/api/users \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "Ana Martínez",
+    "email": "ana@ejemplo.com",
+    "age": 28
+  }'
+
+# Actualizar usuario
+curl -X PUT http://localhost:3000/api/users/1 \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "Juan Carlos Pérez",
+    "age": 31
+  }'
+
+# Eliminar usuario
+curl -X DELETE http://localhost:3000/api/users/1
+\`\`\`
+
+![Ejemplo de respuesta API](data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAwIiBoZWlnaHQ9IjI1MCIgdmlld0JveD0iMCAwIDYwMCAyNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI2MDAiIGhlaWdodD0iMjUwIiBmaWxsPSIjMWExYTFhIi8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjU2MCIgaGVpZ2h0PSIyMTAiIGZpbGw9IiMyZDJkMmQiIHJ4PSI4Ii8+Cjx0ZXh0IHg9IjQwIiB5PSI1MCIgZmlsbD0iIzAwZmY3MyIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxNCI+R0VUIC9hcGkvdXNlcnM8L3RleHQ+Cjx0ZXh0IHg9IjQwIiB5PSI4MCIgZmlsbD0iI2ZmZmZmZiIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIxMiI+ew0KICAic3VjY2VzcyI6IHRydWUsDQogICJkYXRhIjogWw0KICAgIHsNCiAgICAgICJpZCI6IDEsDQogICAgICAibmFtZSI6ICJKdWFuIFDDqXJleiIsDQogICAgICAiZW1haWwiOiAianVhbkBlamVtcGxvLmNvbSINCiAgICB9DQogIF0NCn08L3RleHQ+Cjwvc3ZnPg==)
+
+## Mejores prácticas
+
+### 1. Manejo de errores consistente
+
+\`\`\`javascript
+// Crear un middleware personalizado para errores
+const errorHandler = (err, req, res, next) => {
+  let error = { ...err };
+  error.message = err.message;
+
+  // Log del error
+  console.error(err);
+
+  // Error de Mongoose de ID inválido
+  if (err.name === 'CastError') {
+    const message = 'Recurso no encontrado';
+    error = { message, statusCode: 404 };
+  }
+
+  // Error de validación de Mongoose
+  if (err.name === 'ValidationError') {
+    const message = Object.values(err.errors).map(val => val.message);
+    error = { message, statusCode: 400 };
+  }
+
+  res.status(error.statusCode || 500).json({
+    success: false,
+    error: error.message || 'Error del servidor'
+  });
+};
+\`\`\`
+
+### 2. Logging estructurado
+
+\`\`\`javascript
+const winston = require('winston');
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
+    winston.format.json()
+  ),
+  defaultMeta: { service: 'api-rest' },
+  transports: [
+    new winston.transports.File({ filename: 'error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'combined.log' })
+  ]
+});
+
+if (process.env.NODE_ENV !== 'production') {
+  logger.add(new winston.transports.Console({
+    format: winston.format.simple()
+  }));
+}
+\`\`\`
+
+## Conclusión
+
+Has aprendido a crear una API REST completa con Node.js y Express. Esta base te permitirá:
+
+- ✅ Estructurar proyectos de API de manera profesional
+- ✅ Implementar todas las operaciones CRUD
+- ✅ Manejar errores de forma consistente
+- ✅ Validar datos de entrada
+- ✅ Aplicar buenas prácticas de seguridad
+
+### Próximos pasos
+
+1. **Integrar una base de datos** (MongoDB, PostgreSQL, MySQL)
+2. **Implementar autenticación JWT**
+3. **Agregar tests unitarios y de integración**
+4. **Documentar con Swagger/OpenAPI**
+5. **Implementar rate limiting y caching**
+
+¡Felicitaciones por completar esta guía! 🎉`,
+    summary: "Tutorial completo para crear APIs REST modernas con Node.js y Express, incluyendo ejemplos de código, mejores prácticas, y manejo de errores.",
+    category: "cat-006",
+    tags: ["nodejs", "express", "api", "rest", "javascript", "backend", "desarrollo"],
+    status: "published",
+    author: {
+      id: "author-004",
+      name: "Ana Martínez",
+      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face",
+      email: "ana.martinez@empresa.com"
+    },
+    createdAt: "2024-01-25T08:00:00Z",
+    updatedAt: "2024-01-25T08:00:00Z",
+    publishedAt: "2024-01-25T08:00:00Z",
+    version: 1,
+    viewCount: 45,
+    rating: {
+      helpful: 12,
+      notHelpful: 0,
+      average: 5.0
+    },
+    relatedArticles: ["kb-010", "kb-006"],
+    metadata: {
+      estimatedReadTime: 15,
+      difficulty: "intermediate",
+      lastReviewedAt: "2024-01-25T08:00:00Z",
+      reviewedBy: "Carlos Rodríguez"
+    }
+  },
+  {
     id: "kb-001",
     title: "Cómo configurar el correo electrónico corporativo en dispositivos móviles",
     content: `# Configuración de correo corporativo en dispositivos móviles
