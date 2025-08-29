@@ -37,24 +37,28 @@ export default function Settings() {
       <Sidebar />
       
       <div className="ml-64">
-        <div className="max-w-7xl mx-auto p-8">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center gap-3 mb-4">
-              <Settings2 className="h-8 w-8 text-primary" />
-              <div>
-                <h1 className="text-3xl font-bold text-foreground">Configuración</h1>
-                <nav className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-                  <span>Dashboard</span>
-                  <span>/</span>
-                  <span className="text-foreground font-medium">Configuración</span>
-                </nav>
+          <div className="max-w-7xl mx-auto p-8">
+            {/* Header */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <Settings2 className="h-8 w-8 text-primary" />
+                <div>
+                  <h1 className="text-3xl font-bold text-foreground">Configuración</h1>
+                  <nav className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                    <span>Dashboard</span>
+                    <span>/</span>
+                    <span className="text-foreground font-medium">Configuración</span>
+                  </nav>
+                </div>
+              </div>
+              <p className="text-muted-foreground">
+                Gestiona las configuraciones del sistema y personaliza tu experiencia
+              </p>
+              {/* Debug info */}
+              <div className="text-xs text-muted-foreground mt-2">
+                Categoría seleccionada: {selectedCategory} | Configuraciones filtradas: {filteredSettings.length}
               </div>
             </div>
-            <p className="text-muted-foreground">
-              Gestiona las configuraciones del sistema y personaliza tu experiencia
-            </p>
-          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Navigation Sidebar */}
