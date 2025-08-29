@@ -9,6 +9,7 @@ import { Info, AlertTriangle } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { useSettingValue } from '@/hooks/useSettingValue';
+import { PermissionsManager } from './PermissionsManager';
 import type { Setting } from '@/types/settings';
 
 interface SettingItemProps {
@@ -99,6 +100,12 @@ export const SettingItem: React.FC<SettingItemProps> = ({ setting }) => {
             </SelectContent>
           </Select>
         );
+
+      case 'custom':
+        if (setting.id === 'permissions_management') {
+          return <PermissionsManager />;
+        }
+        return null;
 
       default:
         return null;

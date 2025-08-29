@@ -19,8 +19,8 @@ export interface Setting {
   name: string;
   subtitle?: string;
   description?: string;
-  type: 'boolean' | 'number' | 'text' | 'select';
-  value: boolean | number | string;
+  type: 'boolean' | 'number' | 'text' | 'select' | 'custom';
+  value: boolean | number | string | null;
   
   // Number specific
   min?: number;

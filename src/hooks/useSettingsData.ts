@@ -73,6 +73,17 @@ const mockSettings: Setting[] = [
     order: 1
   },
   {
+    id: 'permissions_management',
+    categoryId: 'security',
+    name: 'Gestión de Permisos',
+    subtitle: 'Administrar roles y permisos de usuarios',
+    description: 'Configurar el acceso y privilegios del sistema',
+    type: 'custom',
+    value: null,
+    impact: 'high',
+    order: 2
+  },
+  {
     id: 'session_timeout',
     categoryId: 'security',
     name: 'Tiempo de Sesión',
@@ -84,7 +95,7 @@ const mockSettings: Setting[] = [
     unit: 'min',
     slider: true,
     impact: 'medium',
-    order: 2
+    order: 3
   },
   {
     id: 'password_strength',
@@ -98,7 +109,7 @@ const mockSettings: Setting[] = [
       { value: 'high', label: 'Estricta' }
     ],
     impact: 'high',
-    order: 3
+    order: 4
   },
   {
     id: 'login_attempts',
@@ -111,7 +122,7 @@ const mockSettings: Setting[] = [
     max: 10,
     unit: 'intentos',
     impact: 'medium',
-    order: 4
+    order: 5
   },
 
   // Notification Settings
