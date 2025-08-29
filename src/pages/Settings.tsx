@@ -1,9 +1,9 @@
 import React, { useState, useMemo } from 'react';
-import { Search, Settings2 } from 'lucide-react';
+import { Search, Settings2, ChevronDown, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useSettingsData } from '@/hooks/useSettingsData';
 import { SettingItem } from '@/components/settings/SettingItem';
 import Sidebar from '@/components/dashboard/Sidebar';
@@ -11,6 +11,7 @@ import Sidebar from '@/components/dashboard/Sidebar';
 export default function Settings() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [openCategories, setOpenCategories] = useState<Record<string, boolean>>({});
   
   const { categories, filteredSettings } = useSettingsData({
     searchTerm,
@@ -23,6 +24,13 @@ export default function Settings() {
       return acc;
     }, {} as Record<string, typeof filteredSettings>);
   }, [categories, filteredSettings]);
+
+  const toggleCategory = (categoryId: string) => {
+    setOpenCategories(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -68,31 +76,64 @@ export default function Settings() {
                     variant={selectedCategory === 'all' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setSelectedCategory('all')}
-                    className="w-full justify-between"
+                    className="w-full justify-start"
                   >
-                    <span>Todas</span>
-                    <Badge variant="secondary" className="ml-auto">
-                      {filteredSettings.length}
-                    </Badge>
+                    <Settings2 className="h-4 w-4 mr-2" />
+                    <span>Todas las configuraciones</span>
                   </Button>
                   
-                  {categories.map((category) => (
-                    <Button
-                      key={category.id}
-                      variant={selectedCategory === category.id ? 'default' : 'ghost'}
-                      size="sm"
-                      onClick={() => setSelectedCategory(category.id)}
-                      className="w-full justify-between"
-                    >
-                      <div className="flex items-center gap-2">
-                        <category.icon className="h-4 w-4" />
-                        <span>{category.name}</span>
+                  {categories.map((category) => {
+                    const categorySettings = settingsByCategory[category.id] || [];
+                    const isOpen = openCategories[category.id];
+                    
+                    return (
+                      <div key={category.id} className="space-y-1">
+                        <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category.id)}>
+                          <CollapsibleTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="w-full justify-start hover:bg-muted/50"
+                            >
+                              <div className="flex items-center gap-2 flex-1">
+                                <category.icon className="h-4 w-4" />
+                                <span>{category.name}</span>
+                              </div>
+                              {isOpen ? (
+                                <ChevronDown className="h-4 w-4" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </CollapsibleTrigger>
+                          
+                          <CollapsibleContent className="space-y-1">
+                            {categorySettings.slice(0, 5).map((setting) => (
+                              <Button
+                                key={setting.id}
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setSelectedCategory(category.id)}
+                                className="w-full justify-start pl-8 text-xs text-muted-foreground hover:text-foreground"
+                              >
+                                <span className="truncate">{setting.name}</span>
+                              </Button>
+                            ))}
+                            {categorySettings.length > 5 && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setSelectedCategory(category.id)}
+                                className="w-full justify-start pl-8 text-xs text-muted-foreground hover:text-foreground"
+                              >
+                                <span>Ver todas ({categorySettings.length})</span>
+                              </Button>
+                            )}
+                          </CollapsibleContent>
+                        </Collapsible>
                       </div>
-                      <Badge variant="secondary" className="ml-auto">
-                        {settingsByCategory[category.id]?.length || 0}
-                      </Badge>
-                    </Button>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
