@@ -1,13 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Users, 
   MessageSquare, 
   ChartBar, 
   ChartLine, 
   Clock, 
-  ChartPie
+  ChartPie,
+  Settings
 } from 'lucide-react';
+import { SettingsPanel } from '@/components/settings/SettingsPanel';
 import { cn } from '@/lib/utils';
 
 interface NavItemProps {
@@ -37,7 +39,14 @@ const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, active }) => {
 };
 
 const Sidebar: React.FC = () => {
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
   return (
+    <>
+      <SettingsPanel 
+        isOpen={settingsOpen} 
+        onClose={() => setSettingsOpen(false)} 
+      />
     <aside className="w-64 bg-ithelp-teal-dark text-white h-screen flex-shrink-0 fixed left-0 top-0 overflow-y-auto">
       <div className="p-6">
         <div className="flex items-center mb-8">
@@ -61,6 +70,19 @@ const Sidebar: React.FC = () => {
             <NavItem icon={Clock} label="Tiempos" />
             <NavItem icon={ChartPie} label="Categorías" />
           </ul>
+          
+          <p className="text-xs uppercase text-white/50 font-semibold mb-2 px-4">CONFIGURACIÓN</p>
+          <ul className="space-y-1 mb-6">
+            <li>
+              <button 
+                onClick={() => setSettingsOpen(true)}
+                className="flex items-center px-4 py-3 rounded-md transition-colors text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground w-full text-left"
+              >
+                <Settings size={18} className="mr-3" />
+                <span className="font-medium">Configuración</span>
+              </button>
+            </li>
+          </ul>
         </nav>
         
         <div className="mt-auto pt-6">
@@ -76,6 +98,7 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
     </aside>
+    </>
   );
 };
 
