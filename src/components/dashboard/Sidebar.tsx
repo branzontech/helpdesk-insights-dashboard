@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   Users, 
   MessageSquare, 
@@ -9,20 +9,23 @@ import {
   ChartPie,
   Settings
 } from 'lucide-react';
-import { SettingsPanel } from '@/components/settings/SettingsPanel';
+import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 interface NavItemProps {
   icon: React.ElementType;
   label: string;
-  active?: boolean;
+  to: string;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, active }) => {
+const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, to }) => {
+  const location = useLocation();
+  const active = location.pathname === to;
+  
   return (
     <li>
-      <a 
-        href="#" 
+      <Link 
+        to={to}
         className={cn(
           "flex items-center px-4 py-3 rounded-md transition-colors",
           active 
@@ -33,20 +36,13 @@ const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, active }) => {
         <Icon size={18} className="mr-3" />
         <span className="font-medium">{label}</span>
         {active && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-ithelp-lime"></div>}
-      </a>
+      </Link>
     </li>
   );
 };
 
 const Sidebar: React.FC = () => {
-  const [settingsOpen, setSettingsOpen] = useState(false);
-
   return (
-    <>
-      <SettingsPanel 
-        isOpen={settingsOpen} 
-        onClose={() => setSettingsOpen(false)} 
-      />
     <aside className="w-64 bg-ithelp-teal-dark text-white h-screen flex-shrink-0 fixed left-0 top-0 overflow-y-auto">
       <div className="p-6">
         <div className="flex items-center mb-8">
@@ -59,29 +55,21 @@ const Sidebar: React.FC = () => {
         <nav>
           <p className="text-xs uppercase text-white/50 font-semibold mb-2 px-4">GENERAL</p>
           <ul className="space-y-1 mb-6">
-            <NavItem icon={ChartBar} label="Dashboard" active />
-            <NavItem icon={MessageSquare} label="Tickets" />
-            <NavItem icon={Users} label="Agentes" />
+            <NavItem icon={ChartBar} label="Dashboard" to="/" />
+            <NavItem icon={MessageSquare} label="Tickets" to="/tickets" />
+            <NavItem icon={Users} label="Agentes" to="/agents" />
           </ul>
           
           <p className="text-xs uppercase text-white/50 font-semibold mb-2 px-4">ANÁLISIS</p>
           <ul className="space-y-1 mb-6">
-            <NavItem icon={ChartLine} label="Rendimiento" />
-            <NavItem icon={Clock} label="Tiempos" />
-            <NavItem icon={ChartPie} label="Categorías" />
+            <NavItem icon={ChartLine} label="Rendimiento" to="/performance" />
+            <NavItem icon={Clock} label="Tiempos" to="/times" />
+            <NavItem icon={ChartPie} label="Categorías" to="/categories" />
           </ul>
           
           <p className="text-xs uppercase text-white/50 font-semibold mb-2 px-4">CONFIGURACIÓN</p>
           <ul className="space-y-1 mb-6">
-            <li>
-              <button 
-                onClick={() => setSettingsOpen(true)}
-                className="flex items-center px-4 py-3 rounded-md transition-colors text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground w-full text-left"
-              >
-                <Settings size={18} className="mr-3" />
-                <span className="font-medium">Configuración</span>
-              </button>
-            </li>
+            <NavItem icon={Settings} label="Configuración" to="/settings" />
           </ul>
         </nav>
         
@@ -98,7 +86,6 @@ const Sidebar: React.FC = () => {
         </div>
       </div>
     </aside>
-    </>
   );
 };
 
