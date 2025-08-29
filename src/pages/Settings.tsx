@@ -40,9 +40,16 @@ export default function Settings() {
         <div className="max-w-7xl mx-auto p-8">
           {/* Header */}
           <div className="mb-8">
-            <div className="flex items-center gap-3 mb-2">
+            <div className="flex items-center gap-3 mb-4">
               <Settings2 className="h-8 w-8 text-primary" />
-              <h1 className="text-3xl font-bold text-foreground">Configuración</h1>
+              <div>
+                <h1 className="text-3xl font-bold text-foreground">Configuración</h1>
+                <nav className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+                  <span>Dashboard</span>
+                  <span>/</span>
+                  <span className="text-foreground font-medium">Configuración</span>
+                </nav>
+              </div>
             </div>
             <p className="text-muted-foreground">
               Gestiona las configuraciones del sistema y personaliza tu experiencia
