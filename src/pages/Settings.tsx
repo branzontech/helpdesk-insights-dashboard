@@ -52,9 +52,9 @@ export default function Settings() {
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Navigation Sidebar */}
             <div className="lg:col-span-1">
-              <div className="bg-card rounded-lg border p-6 sticky top-8">
+              <div className="bg-card rounded-lg border p-6 sticky top-8 h-[calc(100vh-200px)] flex flex-col">
                 {/* Search */}
-                <div className="mb-6">
+                <div className="mb-6 flex-shrink-0">
                   <div className="relative">
                     <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
@@ -66,86 +66,88 @@ export default function Settings() {
                   </div>
                 </div>
 
-                {/* Category Navigation */}
-                <div className="space-y-2">
-                  <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-4">
-                    Categorías
-                  </h3>
-                  
-                  <Button
-                    variant={selectedCategory === 'all' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setSelectedCategory('all')}
-                    className="w-full justify-start transition-all duration-200 hover:scale-[1.02]"
-                  >
-                    <Settings2 className="h-4 w-4 mr-2 flex-shrink-0" />
-                    <span className="truncate">Todas</span>
-                  </Button>
-                  
-                  <div className="space-y-1 animate-fade-in">
-                    {categories.map((category, index) => {
-                      const categorySettings = settingsByCategory[category.id] || [];
-                      const isOpen = openCategories[category.id];
-                      
-                      return (
-                        <div 
-                          key={category.id} 
-                          className="space-y-1"
-                          style={{ animationDelay: `${index * 50}ms` }}
-                        >
-                          <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category.id)}>
-                            <CollapsibleTrigger asChild>
-                              <Button
-                                variant={selectedCategory === category.id ? 'default' : 'ghost'}
-                                size="sm"
-                                className="w-full justify-start transition-all duration-200 hover:scale-[1.02] hover:bg-muted/70"
-                              >
-                                <div className="flex items-center gap-2 flex-1 min-w-0">
-                                  <category.icon className="h-4 w-4 flex-shrink-0" />
-                                  <span className="truncate">{category.name}</span>
-                                </div>
-                                <div className="transition-transform duration-200 flex-shrink-0">
-                                  {isOpen ? (
-                                    <ChevronDown className="h-4 w-4" />
-                                  ) : (
-                                    <ChevronRight className="h-4 w-4" />
+                {/* Category Navigation with Scroll */}
+                <ScrollArea className="flex-1 -mx-2 px-2">
+                  <div className="space-y-2 pr-4">
+                    <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-4">
+                      Categorías
+                    </h3>
+                    
+                    <Button
+                      variant={selectedCategory === 'all' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setSelectedCategory('all')}
+                      className="w-full justify-start transition-all duration-200 hover:scale-[1.02]"
+                    >
+                      <Settings2 className="h-4 w-4 mr-2 flex-shrink-0" />
+                      <span className="truncate">Todas</span>
+                    </Button>
+                    
+                    <div className="space-y-1 animate-fade-in">
+                      {categories.map((category, index) => {
+                        const categorySettings = settingsByCategory[category.id] || [];
+                        const isOpen = openCategories[category.id];
+                        
+                        return (
+                          <div 
+                            key={category.id} 
+                            className="space-y-1"
+                            style={{ animationDelay: `${index * 50}ms` }}
+                          >
+                            <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category.id)}>
+                              <CollapsibleTrigger asChild>
+                                <Button
+                                  variant={selectedCategory === category.id ? 'default' : 'ghost'}
+                                  size="sm"
+                                  className="w-full justify-start transition-all duration-200 hover:scale-[1.02] hover:bg-muted/70"
+                                >
+                                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                                    <category.icon className="h-4 w-4 flex-shrink-0" />
+                                    <span className="truncate">{category.name}</span>
+                                  </div>
+                                  <div className="transition-transform duration-200 flex-shrink-0">
+                                    {isOpen ? (
+                                      <ChevronDown className="h-4 w-4" />
+                                    ) : (
+                                      <ChevronRight className="h-4 w-4" />
+                                    )}
+                                  </div>
+                                </Button>
+                              </CollapsibleTrigger>
+                              
+                              <CollapsibleContent className="space-y-1 animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
+                                <div className="pl-2 space-y-1">
+                                  {categorySettings.slice(0, 5).map((setting, settingIndex) => (
+                                    <Button
+                                      key={setting.id}
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => setSelectedCategory(category.id)}
+                                      className="w-full justify-start pl-6 text-xs text-muted-foreground hover:text-foreground transition-all duration-150 hover:translate-x-1 hover:bg-muted/50"
+                                      style={{ animationDelay: `${settingIndex * 30}ms` }}
+                                    >
+                                      <span className="truncate">{setting.name}</span>
+                                    </Button>
+                                  ))}
+                                  {categorySettings.length > 5 && (
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => setSelectedCategory(category.id)}
+                                      className="w-full justify-start pl-6 text-xs text-muted-foreground hover:text-foreground transition-all duration-150 hover:translate-x-1 hover:bg-muted/50 font-medium"
+                                    >
+                                      <span className="truncate">Ver todas ({categorySettings.length})</span>
+                                    </Button>
                                   )}
                                 </div>
-                              </Button>
-                            </CollapsibleTrigger>
-                            
-                            <CollapsibleContent className="space-y-1 animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
-                              <div className="pl-2 space-y-1">
-                                {categorySettings.slice(0, 5).map((setting, settingIndex) => (
-                                  <Button
-                                    key={setting.id}
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setSelectedCategory(category.id)}
-                                    className="w-full justify-start pl-6 text-xs text-muted-foreground hover:text-foreground transition-all duration-150 hover:translate-x-1 hover:bg-muted/50"
-                                    style={{ animationDelay: `${settingIndex * 30}ms` }}
-                                  >
-                                    <span className="truncate">{setting.name}</span>
-                                  </Button>
-                                ))}
-                                {categorySettings.length > 5 && (
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => setSelectedCategory(category.id)}
-                                    className="w-full justify-start pl-6 text-xs text-muted-foreground hover:text-foreground transition-all duration-150 hover:translate-x-1 hover:bg-muted/50 font-medium"
-                                  >
-                                    <span className="truncate">Ver todas ({categorySettings.length})</span>
-                                  </Button>
-                                )}
-                              </div>
-                            </CollapsibleContent>
-                          </Collapsible>
-                        </div>
-                      );
-                    })}
+                              </CollapsibleContent>
+                            </Collapsible>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                </ScrollArea>
               </div>
             </div>
 
