@@ -76,81 +76,96 @@ export default function Settings() {
                     variant={selectedCategory === 'all' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setSelectedCategory('all')}
-                    className="w-full justify-start"
+                    className="w-full justify-start transition-all duration-200 hover:scale-[1.02]"
                   >
-                    <Settings2 className="h-4 w-4 mr-2" />
-                    <span>Todas las configuraciones</span>
+                    <Settings2 className="h-4 w-4 mr-2 flex-shrink-0" />
+                    <span className="truncate">Todas</span>
                   </Button>
                   
-                  {categories.map((category) => {
-                    const categorySettings = settingsByCategory[category.id] || [];
-                    const isOpen = openCategories[category.id];
-                    
-                    return (
-                      <div key={category.id} className="space-y-1">
-                        <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category.id)}>
-                          <CollapsibleTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="w-full justify-start hover:bg-muted/50"
-                            >
-                              <div className="flex items-center gap-2 flex-1">
-                                <category.icon className="h-4 w-4" />
-                                <span>{category.name}</span>
+                  <div className="space-y-1 animate-fade-in">
+                    {categories.map((category, index) => {
+                      const categorySettings = settingsByCategory[category.id] || [];
+                      const isOpen = openCategories[category.id];
+                      
+                      return (
+                        <div 
+                          key={category.id} 
+                          className="space-y-1"
+                          style={{ animationDelay: `${index * 50}ms` }}
+                        >
+                          <Collapsible open={isOpen} onOpenChange={() => toggleCategory(category.id)}>
+                            <CollapsibleTrigger asChild>
+                              <Button
+                                variant={selectedCategory === category.id ? 'default' : 'ghost'}
+                                size="sm"
+                                className="w-full justify-start transition-all duration-200 hover:scale-[1.02] hover:bg-muted/70"
+                              >
+                                <div className="flex items-center gap-2 flex-1 min-w-0">
+                                  <category.icon className="h-4 w-4 flex-shrink-0" />
+                                  <span className="truncate">{category.name}</span>
+                                </div>
+                                <div className="transition-transform duration-200 flex-shrink-0">
+                                  {isOpen ? (
+                                    <ChevronDown className="h-4 w-4" />
+                                  ) : (
+                                    <ChevronRight className="h-4 w-4" />
+                                  )}
+                                </div>
+                              </Button>
+                            </CollapsibleTrigger>
+                            
+                            <CollapsibleContent className="space-y-1 animate-accordion-down data-[state=closed]:animate-accordion-up overflow-hidden">
+                              <div className="pl-2 space-y-1">
+                                {categorySettings.slice(0, 5).map((setting, settingIndex) => (
+                                  <Button
+                                    key={setting.id}
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setSelectedCategory(category.id)}
+                                    className="w-full justify-start pl-6 text-xs text-muted-foreground hover:text-foreground transition-all duration-150 hover:translate-x-1 hover:bg-muted/50"
+                                    style={{ animationDelay: `${settingIndex * 30}ms` }}
+                                  >
+                                    <span className="truncate">{setting.name}</span>
+                                  </Button>
+                                ))}
+                                {categorySettings.length > 5 && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => setSelectedCategory(category.id)}
+                                    className="w-full justify-start pl-6 text-xs text-muted-foreground hover:text-foreground transition-all duration-150 hover:translate-x-1 hover:bg-muted/50 font-medium"
+                                  >
+                                    <span className="truncate">Ver todas ({categorySettings.length})</span>
+                                  </Button>
+                                )}
                               </div>
-                              {isOpen ? (
-                                <ChevronDown className="h-4 w-4" />
-                              ) : (
-                                <ChevronRight className="h-4 w-4" />
-                              )}
-                            </Button>
-                          </CollapsibleTrigger>
-                          
-                          <CollapsibleContent className="space-y-1">
-                            {categorySettings.slice(0, 5).map((setting) => (
-                              <Button
-                                key={setting.id}
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setSelectedCategory(category.id)}
-                                className="w-full justify-start pl-8 text-xs text-muted-foreground hover:text-foreground"
-                              >
-                                <span className="truncate">{setting.name}</span>
-                              </Button>
-                            ))}
-                            {categorySettings.length > 5 && (
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setSelectedCategory(category.id)}
-                                className="w-full justify-start pl-8 text-xs text-muted-foreground hover:text-foreground"
-                              >
-                                <span>Ver todas ({categorySettings.length})</span>
-                              </Button>
-                            )}
-                          </CollapsibleContent>
-                        </Collapsible>
-                      </div>
-                    );
-                  })}
+                            </CollapsibleContent>
+                          </Collapsible>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Settings Content */}
             <div className="lg:col-span-3">
-              <div className="bg-card rounded-lg border">
+              <div className="bg-card rounded-lg border animate-fade-in">
                 <ScrollArea className="h-[calc(100vh-200px)]">
                   <div className="p-6 space-y-8">
                     {selectedCategory === 'all' ? (
                       // Show all categories
-                      categories.map((category) => {
+                      categories.map((category, index) => {
                         const categorySettings = settingsByCategory[category.id] || [];
                         if (categorySettings.length === 0) return null;
                         
                         return (
-                          <div key={category.id} className="space-y-4">
+                          <div 
+                            key={category.id} 
+                            className="space-y-4 animate-fade-in"
+                            style={{ animationDelay: `${index * 100}ms` }}
+                          >
                             <div className="flex items-center gap-3 pb-3 border-b">
                               <category.icon className="h-5 w-5 text-primary" />
                               <div>
@@ -163,8 +178,14 @@ export default function Settings() {
                               </div>
                             </div>
                             <div className="grid gap-4">
-                              {categorySettings.map((setting) => (
-                                <SettingItem key={setting.id} setting={setting} />
+                              {categorySettings.map((setting, settingIndex) => (
+                                <div 
+                                  key={setting.id}
+                                  className="animate-fade-in hover:scale-[1.01] transition-transform duration-200"
+                                  style={{ animationDelay: `${(index * 100) + (settingIndex * 50)}ms` }}
+                                >
+                                  <SettingItem setting={setting} />
+                                </div>
                               ))}
                             </div>
                           </div>
@@ -172,7 +193,7 @@ export default function Settings() {
                       })
                     ) : (
                       // Show specific category
-                      <div className="space-y-4">
+                      <div className="space-y-4 animate-fade-in">
                         {(() => {
                           const category = categories.find(c => c.id === selectedCategory);
                           return category ? (
@@ -191,15 +212,21 @@ export default function Settings() {
                         })()}
                         
                         <div className="grid gap-4">
-                          {filteredSettings.map((setting) => (
-                            <SettingItem key={setting.id} setting={setting} />
+                          {filteredSettings.map((setting, index) => (
+                            <div 
+                              key={setting.id}
+                              className="animate-fade-in hover:scale-[1.01] transition-transform duration-200"
+                              style={{ animationDelay: `${index * 50}ms` }}
+                            >
+                              <SettingItem setting={setting} />
+                            </div>
                           ))}
                         </div>
                       </div>
                     )}
                     
                     {filteredSettings.length === 0 && (
-                      <div className="text-center py-12">
+                      <div className="text-center py-12 animate-fade-in">
                         <Settings2 className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
                         <h3 className="text-lg font-medium text-foreground mb-2">
                           No se encontraron configuraciones
