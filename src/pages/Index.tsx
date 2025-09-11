@@ -20,28 +20,38 @@ import {
   satisfactionData, 
   firstResponseTimeData 
 } from '@/lib/mockData';
+import { useTour } from '@/hooks/useTour';
+import { dashboardTourSteps } from '@/data/tourSteps';
+import Joyride from 'react-joyride';
 
 const Index = () => {
   const avgResponseTime = agentPerformanceData.reduce((sum, agent) => sum + agent.avgResponseTime, 0) / agentPerformanceData.length;
   
+  const { tourProps } = useTour({
+    key: 'dashboard',
+    steps: dashboardTourSteps,
+  });
+  
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Sidebar />
-      
-      <div className="pl-64">
-        <div className="container mx-auto p-6">
-          <div className="flex justify-between items-center mb-6">
-            <Header />
-            <Link to="/tickets">
-              <Button className="flex items-center space-x-2">
-                <Ticket className="h-4 w-4" />
-                <span>Ticket Management</span>
-              </Button>
-            </Link>
-          </div>
-          
-          {/* Tarjetas de estadísticas */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
+    <>
+      <Joyride {...tourProps} />
+      <div className="min-h-screen bg-gray-50">
+        <Sidebar />
+        
+        <div className="pl-64">
+          <div className="container mx-auto p-6">
+            <div className="flex justify-between items-center mb-6">
+              <Header />
+              <Link to="/tickets">
+                <Button className="flex items-center space-x-2">
+                  <Ticket className="h-4 w-4" />
+                  <span>Ticket Management</span>
+                </Button>
+              </Link>
+            </div>
+            
+            {/* Tarjetas de estadísticas */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6" data-tour="dashboard-stats">
             <StatCard 
               title="Tiempo Promedio de Respuesta" 
               value={`${avgResponseTime.toFixed(1)} min`} 
@@ -116,6 +126,7 @@ const Index = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

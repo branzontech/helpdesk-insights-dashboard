@@ -56,7 +56,9 @@ const Sidebar: React.FC = () => {
           <p className="text-xs uppercase text-white/50 font-semibold mb-2 px-4">GENERAL</p>
           <ul className="space-y-1 mb-6">
             <NavItem icon={ChartBar} label="Dashboard" to="/" />
-            <NavItem icon={MessageSquare} label="Tickets" to="/tickets" />
+            <li data-tour="sidebar-tickets">
+              <NavItem icon={MessageSquare} label="Tickets" to="/tickets" />
+            </li>
             <NavItem icon={Users} label="Agentes" to="/agents" />
           </ul>
           
@@ -69,6 +71,12 @@ const Sidebar: React.FC = () => {
           
           <p className="text-xs uppercase text-white/50 font-semibold mb-2 px-4">CONFIGURACIÓN</p>
           <ul className="space-y-1 mb-6">
+            <li data-tour="sidebar-knowledge">
+              <NavItem icon={MessageSquare} label="Base de Conocimientos" to="/knowledge" />
+            </li>
+            <li data-tour="sidebar-parameters">
+              <NavItem icon={Settings} label="Parámetros" to="/parameters" />
+            </li>
             <NavItem icon={Settings} label="Configuración" to="/settings" />
           </ul>
         </nav>
