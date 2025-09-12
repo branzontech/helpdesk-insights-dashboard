@@ -51,7 +51,7 @@ const Login = () => {
         </div>
 
         {/* Right side - Login Form */}
-        <Card className="w-full max-w-md mx-auto shadow-xl border-0 bg-card/80 backdrop-blur-sm">
+        <Card className="w-full max-w-md mx-auto shadow-2xl border border-white/20 bg-white/10 backdrop-blur-lg">
           <CardHeader className="text-center space-y-4">
             <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
               <Bot className="w-8 h-8 text-white" />
