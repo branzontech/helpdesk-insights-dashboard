@@ -85,6 +85,16 @@ const getPriorityDot = (priority: string) => {
   return colors[priority as keyof typeof colors] || 'bg-gray-500';
 };
 
+const getPriorityCardBackground = (priority: string) => {
+  const backgrounds = {
+    critical: 'bg-red-50/80 border-red-200/50 hover:bg-red-50',
+    high: 'bg-orange-50/80 border-orange-200/50 hover:bg-orange-50',
+    medium: 'bg-yellow-50/80 border-yellow-200/50 hover:bg-yellow-50',
+    low: 'bg-green-50/80 border-green-200/50 hover:bg-green-50'
+  };
+  return backgrounds[priority as keyof typeof backgrounds] || 'bg-gray-50/80 border-gray-200/50 hover:bg-gray-50';
+};
+
 const TicketList: React.FC<TicketListProps> = ({
   tickets,
   selectedTicketId,
@@ -308,7 +318,7 @@ const TicketList: React.FC<TicketListProps> = ({
                   selectedTicketId === ticket.id 
                     ? 'ring-1 ring-primary' 
                     : ''
-                } ${getStatusColor(ticket.status)}`}
+                } ${getStatusColor(ticket.status)} ${getPriorityCardBackground(ticket.priority)}`}
                 onClick={() => onTicketSelect(ticket.id)}
               >
                 <CardContent className="p-3">
