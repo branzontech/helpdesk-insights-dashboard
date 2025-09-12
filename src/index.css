@@ -102,6 +102,19 @@
   }
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
 @layer utilities {
   .bg-dashboard-gradient {
     @apply bg-gradient-to-r from-ithelp-teal-dark to-ithelp-teal-medium;

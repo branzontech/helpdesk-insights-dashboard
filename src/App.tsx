@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
+import Login from "./pages/Login";
 import TicketLayout from "./components/ticket/TicketLayout";
 import KnowledgeBaseLayout from "./components/knowledge/KnowledgeBaseLayout";
 import ParametersLayout from "./components/parameters/ParametersLayout";
@@ -21,6 +22,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
+            <Route path="/login" element={<Login />} />
             <Route path="/" element={<Index />} />
             <Route path="/tickets" element={<TicketLayout />} />
             <Route path="/ticket/:id" element={<TicketLayout />} />
