@@ -53,7 +53,7 @@ const Login = () => {
         {/* Right side - Login Form */}
         <Card className="w-full max-w-md mx-auto shadow-2xl border border-white/20 bg-white/10 backdrop-blur-lg">
           <CardHeader className="text-center space-y-4">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
+            <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: "#8ccf38" }}>
               <Bot className="w-8 h-8 text-white" />
             </div>
             <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
@@ -115,7 +115,8 @@ const Login = () => {
 
               <Button 
                 type="submit" 
-                className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-white"
+                className="w-full text-white hover:opacity-90 transition-opacity"
+                style={{ backgroundColor: "#8ccf38" }}
                 disabled={isLoading}
               >
                 {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
