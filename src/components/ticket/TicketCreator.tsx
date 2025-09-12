@@ -83,6 +83,89 @@ const categories = [
   "General Support"
 ];
 
+// Campos específicos por categoría
+const categoryFields: Record<string, Array<{
+  id: string;
+  label: string;
+  type: 'text' | 'email' | 'tel' | 'textarea' | 'select';
+  placeholder: string;
+  options?: string[];
+  required?: boolean;
+}>> = {
+  "Email & Communication": [
+    { id: "email_service", label: "Email Service Provider", type: "select", placeholder: "Select provider", options: ["Gmail", "Outlook", "Exchange", "Apple Mail", "Other"], required: true },
+    { id: "email_client", label: "Email Client", type: "select", placeholder: "Select client", options: ["Web Browser", "Desktop App", "Mobile App", "Thunderbird", "Other"] },
+    { id: "error_message", label: "Error Message", type: "textarea", placeholder: "Copy and paste the exact error message..." },
+    { id: "sender_email", label: "Sender Email", type: "email", placeholder: "sender@example.com" },
+    { id: "recipient_email", label: "Recipient Email", type: "email", placeholder: "recipient@example.com" },
+    { id: "email_size", label: "Email Size (MB)", type: "text", placeholder: "e.g., 25MB" },
+    { id: "attachments", label: "Attachments", type: "select", placeholder: "Select option", options: ["Yes, with attachments", "No attachments", "Only attachments failing"] },
+    { id: "frequency", label: "Issue Frequency", type: "select", placeholder: "Select frequency", options: ["Always", "Sometimes", "First time", "Intermittent"] },
+    { id: "last_working", label: "Last Working Date", type: "text", placeholder: "When did it last work? e.g., Yesterday" },
+    { id: "additional_info", label: "Additional Information", type: "textarea", placeholder: "Any other relevant details..." }
+  ],
+  "Software Installation": [
+    { id: "software_name", label: "Software Name", type: "text", placeholder: "Name of the software", required: true },
+    { id: "software_version", label: "Version", type: "text", placeholder: "e.g., 2024.1.0" },
+    { id: "operating_system", label: "Operating System", type: "select", placeholder: "Select OS", options: ["Windows 11", "Windows 10", "macOS", "Linux", "Other"], required: true },
+    { id: "installation_source", label: "Installation Source", type: "select", placeholder: "Select source", options: ["Company Store", "Official Website", "CD/DVD", "USB Drive", "Network Drive"] },
+    { id: "error_code", label: "Error Code", type: "text", placeholder: "e.g., Error 1603" },
+    { id: "installation_step", label: "Installation Step", type: "textarea", placeholder: "At what step does the installation fail?" },
+    { id: "previous_versions", label: "Previous Versions", type: "select", placeholder: "Select option", options: ["First installation", "Upgrade from older version", "Reinstalling same version"] },
+    { id: "admin_rights", label: "Administrator Rights", type: "select", placeholder: "Select option", options: ["Yes, I have admin rights", "No, limited user", "Not sure"] },
+    { id: "antivirus_software", label: "Antivirus Software", type: "text", placeholder: "Name of antivirus (if any)" },
+    { id: "disk_space", label: "Available Disk Space", type: "text", placeholder: "e.g., 500GB available" }
+  ],
+  "Hardware": [
+    { id: "device_type", label: "Device Type", type: "select", placeholder: "Select device", options: ["Desktop Computer", "Laptop", "Printer", "Scanner", "Monitor", "Keyboard", "Mouse", "Other"], required: true },
+    { id: "device_model", label: "Device Model", type: "text", placeholder: "e.g., Dell OptiPlex 7090", required: true },
+    { id: "serial_number", label: "Serial Number", type: "text", placeholder: "Device serial number" },
+    { id: "purchase_date", label: "Purchase Date", type: "text", placeholder: "Approximate purchase date" },
+    { id: "warranty_status", label: "Warranty Status", type: "select", placeholder: "Select status", options: ["Under warranty", "Warranty expired", "Not sure"] },
+    { id: "symptoms", label: "Symptoms", type: "textarea", placeholder: "Describe what the device is doing or not doing..." },
+    { id: "when_started", label: "When Started", type: "text", placeholder: "When did the problem start?" },
+    { id: "physical_damage", label: "Physical Damage", type: "select", placeholder: "Select option", options: ["No visible damage", "Minor damage", "Significant damage", "Liquid spill"] },
+    { id: "connectivity", label: "Connectivity", type: "select", placeholder: "Select connection", options: ["USB", "Wireless", "Bluetooth", "Network Cable", "Power Only", "Other"] },
+    { id: "error_lights", label: "Error Lights/Sounds", type: "textarea", placeholder: "Any blinking lights, beeps, or error indicators?" }
+  ],
+  "Network & Security": [
+    { id: "network_type", label: "Network Type", type: "select", placeholder: "Select type", options: ["WiFi", "Ethernet", "VPN", "Mobile Hotspot", "Other"], required: true },
+    { id: "internet_speed", label: "Internet Speed", type: "text", placeholder: "e.g., 100 Mbps down / 20 Mbps up" },
+    { id: "affected_devices", label: "Affected Devices", type: "select", placeholder: "Select option", options: ["Single device", "Multiple devices", "All devices", "Specific brand/type"] },
+    { id: "connection_error", label: "Connection Error", type: "textarea", placeholder: "Exact error message or description" },
+    { id: "security_software", label: "Security Software", type: "text", placeholder: "Firewall, antivirus, etc." },
+    { id: "vpn_details", label: "VPN Details", type: "text", placeholder: "VPN service name (if applicable)" },
+    { id: "network_changes", label: "Recent Changes", type: "textarea", placeholder: "Any recent network changes or updates?" },
+    { id: "ip_configuration", label: "IP Configuration", type: "select", placeholder: "Select option", options: ["Automatic (DHCP)", "Static IP", "Not sure"] },
+    { id: "dns_settings", label: "DNS Settings", type: "text", placeholder: "Custom DNS servers (if any)" },
+    { id: "ports_protocols", label: "Specific Ports/Protocols", type: "text", placeholder: "If applicable (e.g., port 443, HTTPS)" }
+  ],
+  "Account Access": [
+    { id: "account_type", label: "Account Type", type: "select", placeholder: "Select type", options: ["Company Email", "Software License", "Cloud Service", "Network Login", "Database", "Other"], required: true },
+    { id: "username", label: "Username/Email", type: "text", placeholder: "Account username or email" },
+    { id: "last_successful", label: "Last Successful Login", type: "text", placeholder: "When did you last access successfully?" },
+    { id: "error_message_access", label: "Error Message", type: "textarea", placeholder: "Copy the exact error message" },
+    { id: "password_changed", label: "Password Recently Changed", type: "select", placeholder: "Select option", options: ["Yes, by me", "Yes, by admin", "No, same password", "I don't remember"] },
+    { id: "mfa_enabled", label: "Multi-Factor Authentication", type: "select", placeholder: "Select option", options: ["Yes, enabled", "No MFA", "Not sure"] },
+    { id: "access_location", label: "Access Location", type: "select", placeholder: "Select location", options: ["Office network", "Home", "Public WiFi", "Mobile network", "Other"] },
+    { id: "browser_device", label: "Browser/Device", type: "text", placeholder: "e.g., Chrome on Windows, Safari on iPhone" },
+    { id: "account_locked", label: "Account Status", type: "select", placeholder: "Select status", options: ["Account works normally", "Account is locked", "Account is disabled", "Not sure"] },
+    { id: "urgency_reason", label: "Urgency Reason", type: "textarea", placeholder: "Why do you need access urgently?" }
+  ],
+  "General Support": [
+    { id: "issue_category", label: "Issue Category", type: "select", placeholder: "Select category", options: ["Performance", "User Training", "Feature Request", "Bug Report", "Documentation", "Other"], required: true },
+    { id: "affected_application", label: "Affected Application", type: "text", placeholder: "Which application or system?" },
+    { id: "user_level", label: "User Experience Level", type: "select", placeholder: "Select level", options: ["Beginner", "Intermediate", "Advanced", "Expert"] },
+    { id: "preferred_contact", label: "Preferred Contact Method", type: "select", placeholder: "Select method", options: ["Email", "Phone", "Video Call", "In-person", "Chat"] },
+    { id: "business_impact", label: "Business Impact", type: "select", placeholder: "Select impact", options: ["No impact", "Low impact", "Medium impact", "High impact", "Critical"] },
+    { id: "workaround_tried", label: "Workarounds Tried", type: "textarea", placeholder: "What solutions have you already attempted?" },
+    { id: "expected_outcome", label: "Expected Outcome", type: "textarea", placeholder: "What result are you hoping to achieve?" },
+    { id: "deadline", label: "Deadline", type: "text", placeholder: "Do you have a specific deadline?" },
+    { id: "additional_users", label: "Other Affected Users", type: "text", placeholder: "Names or emails of others affected" },
+    { id: "supporting_documents", label: "Supporting Documents", type: "textarea", placeholder: "List any screenshots, files, or documents you can provide" }
+  ]
+};
+
 const priorityOptions = [
   { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800' },
   { value: 'medium', label: 'Medium', color: 'bg-yellow-100 text-yellow-800' },
@@ -147,6 +230,11 @@ const TicketCreator: React.FC<TicketCreatorProps> = ({ onCreateTicket, children 
       customer: null,
       customFields: {}
     });
+    setCustomerSearch('');
+    setNewTag('');
+    setShowCustomerSearch(false);
+    setShowNewCustomerForm(false);
+    setNewCustomer({ name: '', email: '', company: '' });
     setOpen(false);
   };
 
@@ -196,7 +284,7 @@ const TicketCreator: React.FC<TicketCreatorProps> = ({ onCreateTicket, children 
         )}
       </DialogTrigger>
       
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Plus className="h-5 w-5" />
@@ -432,6 +520,80 @@ const TicketCreator: React.FC<TicketCreatorProps> = ({ onCreateTicket, children 
               className="min-h-[100px]"
             />
           </div>
+
+          {/* Dynamic Category Fields */}
+          {formData.category && categoryFields[formData.category] && (
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Separator className="flex-1" />
+                <span className="text-sm font-medium text-muted-foreground">
+                  {formData.category} Details
+                </span>
+                <Separator className="flex-1" />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-muted/30 rounded-lg">
+                {categoryFields[formData.category].map((field) => (
+                  <div key={field.id} className="space-y-2">
+                    <Label htmlFor={field.id} className="text-sm">
+                      {field.label}
+                      {field.required && <span className="text-destructive ml-1">*</span>}
+                    </Label>
+                    
+                    {field.type === 'select' ? (
+                      <Select
+                        value={formData.customFields[field.id] || ''}
+                        onValueChange={(value) => 
+                          setFormData(prev => ({
+                            ...prev,
+                            customFields: { ...prev.customFields, [field.id]: value }
+                          }))
+                        }
+                      >
+                        <SelectTrigger className="h-9">
+                          <SelectValue placeholder={field.placeholder} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {field.options?.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    ) : field.type === 'textarea' ? (
+                      <Textarea
+                        id={field.id}
+                        placeholder={field.placeholder}
+                        value={formData.customFields[field.id] || ''}
+                        onChange={(e) =>
+                          setFormData(prev => ({
+                            ...prev,
+                            customFields: { ...prev.customFields, [field.id]: e.target.value }
+                          }))
+                        }
+                        className="min-h-[80px] text-sm"
+                      />
+                    ) : (
+                      <Input
+                        id={field.id}
+                        type={field.type}
+                        placeholder={field.placeholder}
+                        value={formData.customFields[field.id] || ''}
+                        onChange={(e) =>
+                          setFormData(prev => ({
+                            ...prev,
+                            customFields: { ...prev.customFields, [field.id]: e.target.value }
+                          }))
+                        }
+                        className="h-9 text-sm"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Tags */}
           <div className="space-y-2">
