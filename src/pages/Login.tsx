@@ -51,13 +51,13 @@ const Login = () => {
         </div>
 
         {/* Right side - Login Form */}
-        <Card className="w-full max-w-md mx-auto shadow-2xl border border-white/20 bg-white/10 backdrop-blur-lg">
+        <Card className="w-full max-w-md mx-auto shadow-2xl border border-white/20 bg-white/10 backdrop-blur-lg text-white">
           <CardHeader className="text-center space-y-4">
             <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: "#8ccf38" }}>
               <Bot className="w-8 h-8 text-white" />
             </div>
-            <CardTitle className="text-2xl">Iniciar Sesión</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-2xl text-white">Iniciar Sesión</CardTitle>
+            <CardDescription className="text-white/80">
               Accede a tu panel de control de soporte técnico
             </CardDescription>
           </CardHeader>
@@ -65,38 +65,38 @@ const Login = () => {
           <CardContent>
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Correo Electrónico</Label>
+                <Label htmlFor="email" className="text-white">Correo Electrónico</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-white/70" />
                   <Input
                     id="email"
                     type="email"
                     placeholder="admin@ithelp.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-white/50"
                     required
                   />
                 </div>
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
+                <Label htmlFor="password" className="text-white">Contraseña</Label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-white/70" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 pr-10"
+                    className="pl-10 pr-10 bg-white/10 border-white/30 text-white placeholder:text-white/60 focus:border-white/50"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 h-4 w-4 text-muted-foreground hover:text-foreground transition-colors"
+                    className="absolute right-3 top-3 h-4 w-4 text-white/70 hover:text-white transition-colors"
                   >
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -105,10 +105,10 @@ const Login = () => {
 
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center space-x-2 cursor-pointer">
-                  <input type="checkbox" className="rounded border-border" />
-                  <span className="text-muted-foreground">Recordarme</span>
+                  <input type="checkbox" className="rounded border-white/30" />
+                  <span className="text-white/80">Recordarme</span>
                 </label>
-                <Link to="/forgot-password" className="text-primary hover:underline">
+                <Link to="/forgot-password" className="text-white/90 hover:text-white hover:underline">
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
@@ -122,9 +122,9 @@ const Login = () => {
                 {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
               </Button>
 
-              <div className="text-center text-sm text-muted-foreground">
+              <div className="text-center text-sm text-white/80">
                 ¿No tienes una cuenta?{" "}
-                <Link to="/register" className="text-primary hover:underline">
+                <Link to="/register" className="text-white hover:underline">
                   Regístrate aquí
                 </Link>
               </div>
