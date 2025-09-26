@@ -558,11 +558,11 @@ export const mockTickets: TicketDetail[] = [
     id: "TICK-2024-011",
     title: "User unable to upload files",
     description: "File upload feature not working in the web application. Getting permission errors.",
-    status: "open",
+    status: "closed",
     priority: "medium",
     category: "File Management",
     createdAt: "2024-01-16T14:20:00Z",
-    updatedAt: "2024-01-16T14:20:00Z",
+    updatedAt: "2024-01-17T16:45:00Z",
     tags: ["upload", "files", "permissions", "web-app"],
     customer: {
       id: "CUST-011",
@@ -576,7 +576,92 @@ export const mockTickets: TicketDetail[] = [
       totalTickets: 2,
       satisfactionScore: 4.0
     },
-    messages: [],
+    assignedAgent: {
+      id: "AGENT-003",
+      name: "Carlos Rodríguez",
+      avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+      email: "carlos.rodriguez@support.com"
+    },
+    messages: [
+      {
+        id: "MSG-1101",
+        content: "Hi, I'm having trouble uploading files to our web application. Every time I try to upload a PDF, I get a permission error. This is blocking my work.",
+        timestamp: "2024-01-16T14:20:00Z",
+        author: {
+          id: "CUST-011",
+          name: "Rachel Green",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b993?w=150&h=150&fit=crop&crop=face",
+          type: "customer"
+        }
+      },
+      {
+        id: "MSG-1102",
+        content: "Hello Rachel! I'll help you with the file upload issue. Let me check the server permissions and get back to you shortly.",
+        timestamp: "2024-01-16T14:30:00Z",
+        author: {
+          id: "AGENT-003",
+          name: "Carlos Rodríguez",
+          avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+          type: "agent"
+        }
+      },
+      {
+        id: "MSG-1103",
+        content: "I've found the issue - it's a server configuration problem that requires escalation to our backend team. This ticket has been escalado to Level 2 support for immediate attention.",
+        timestamp: "2024-01-16T15:15:00Z",
+        author: {
+          id: "AGENT-003",
+          name: "Carlos Rodríguez",
+          avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+          type: "agent"
+        }
+      },
+      {
+        id: "MSG-1104",
+        content: "Unfortunately, the initial solution we proposed was rechazado by the security team due to compliance issues. We need to implement a different approach.",
+        timestamp: "2024-01-16T16:30:00Z",
+        author: {
+          id: "AGENT-003",
+          name: "Carlos Rodríguez",
+          avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+          type: "agent"
+        },
+        isPrivate: true
+      },
+      {
+        id: "MSG-1105",
+        content: "Good news! We've implemented a secure file upload solution that meets all compliance requirements. Please try uploading your files now.",
+        timestamp: "2024-01-17T10:20:00Z",
+        author: {
+          id: "AGENT-003",
+          name: "Carlos Rodríguez",
+          avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+          type: "agent"
+        }
+      },
+      {
+        id: "MSG-1106",
+        content: "Perfect! The file upload is working now. Thank you for resolving this issue. I would like to give this ticket a calificación of 2 estrellas. Motivo: The resolution took too long and required multiple escalations.",
+        timestamp: "2024-01-17T14:30:00Z",
+        author: {
+          id: "CUST-011",
+          name: "Rachel Green",
+          avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b993?w=150&h=150&fit=crop&crop=face",
+          type: "customer"
+        }
+      },
+      {
+        id: "MSG-1107",
+        content: "Thank you for your feedback, Rachel. I understand your frustration with the extended resolution time. We'll use this feedback to improve our processes.",
+        timestamp: "2024-01-17T16:45:00Z",
+        author: {
+          id: "AGENT-003",
+          name: "Carlos Rodríguez",
+          avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop&crop=face",
+          type: "agent"
+        }
+      }
+    ],
     customFields: {
       fileSize: "15 MB",
       fileType: "PDF",
