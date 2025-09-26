@@ -332,11 +332,42 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
   );
 };
 
-// Enhanced Message Component
+// Enhanced Message Component with Rating, Escalation, and Rejection features
 const MessageItemEnhanced: React.FC<{ message: TicketMessage }> = ({ message }) => {
   const isAgent = message.author.type === 'agent';
   const isSystem = message.author.type === 'system';
   const isPrivate = message.isPrivate;
+
+  // Check for special message types
+  const isRatingMessage = message.content.includes('calificación') || message.content.includes('rating');
+  const isEscalationMessage = message.content.includes('escalado') || message.content.includes('escalated');
+  const isRejectionMessage = message.content.includes('rechazado') || message.content.includes('rejected');
+  
+  const renderStarRating = (rating: number) => {
+    return (
+      <div className="flex items-center space-x-1 mt-2">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`h-4 w-4 ${
+              star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
+            }`}
+          />
+        ))}
+        <span className="text-sm ml-2">{rating}/5 estrellas</span>
+      </div>
+    );
+  };
+
+  const extractRatingFromMessage = (content: string): number | null => {
+    const ratingMatch = content.match(/(\d+)\s*(estrella|star)/i);
+    return ratingMatch ? parseInt(ratingMatch[1]) : null;
+  };
+
+  const extractReasonFromMessage = (content: string): string | null => {
+    const reasonMatch = content.match(/motivo:\s*(.+)/i);
+    return reasonMatch ? reasonMatch[1] : null;
+  };
 
   return (
     <div className={`flex ${isAgent && !isSystem ? 'justify-end' : 'justify-start'}`}>
@@ -360,6 +391,18 @@ const MessageItemEnhanced: React.FC<{ message: TicketMessage }> = ({ message }) 
               Private
             </Badge>
           )}
+          {isEscalationMessage && (
+            <Badge variant="destructive" className="text-xs">
+              <TrendingUp className="h-3 w-3 mr-1" />
+              Escalado
+            </Badge>
+          )}
+          {isRejectionMessage && (
+            <Badge variant="destructive" className="text-xs">
+              <X className="h-3 w-3 mr-1" />
+              Rechazado
+            </Badge>
+          )}
         </div>
         
         <div 
@@ -369,9 +412,65 @@ const MessageItemEnhanced: React.FC<{ message: TicketMessage }> = ({ message }) 
               : isAgent 
                 ? 'bg-primary text-primary-foreground' 
                 : 'bg-muted border'
-          } ${isPrivate ? 'border-2 border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20' : ''}`}
+          } ${isPrivate ? 'border-2 border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20' : ''}
+          ${isEscalationMessage ? 'border-2 border-orange-200 bg-orange-50 dark:bg-orange-950/20' : ''}
+          ${isRejectionMessage ? 'border-2 border-red-200 bg-red-50 dark:bg-red-950/20' : ''}
+          ${isRatingMessage ? 'border-2 border-blue-200 bg-blue-50 dark:bg-blue-950/20' : ''}`}
         >
           <div className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</div>
+          
+          {/* Rating Display */}
+          {isRatingMessage && (() => {
+            const rating = extractRatingFromMessage(message.content);
+            const reason = extractReasonFromMessage(message.content);
+            
+            return (
+              <div className="mt-3 pt-3 border-t border-current/20">
+                {rating && (
+                  <div className="flex flex-col space-y-2">
+                    {renderStarRating(rating)}
+                    {rating < 3 && (
+                      <div className="p-2 bg-red-50 dark:bg-red-950/30 border border-red-200 rounded text-sm">
+                        <div className="flex items-center text-red-600 dark:text-red-400 mb-1">
+                          <AlertCircle className="h-4 w-4 mr-1" />
+                          Calificación baja detectada
+                        </div>
+                        {reason && (
+                          <div className="text-red-700 dark:text-red-300">
+                            <strong>Motivo:</strong> {reason}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Escalation Indicator */}
+          {isEscalationMessage && (
+            <div className="mt-3 pt-3 border-t border-current/20">
+              <div className="p-2 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 rounded text-sm">
+                <div className="flex items-center text-orange-600 dark:text-orange-400">
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  Este ticket ha sido escalado a un nivel superior
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Rejection Indicator */}
+          {isRejectionMessage && (
+            <div className="mt-3 pt-3 border-t border-current/20">
+              <div className="p-2 bg-red-50 dark:bg-red-950/30 border border-red-200 rounded text-sm">
+                <div className="flex items-center text-red-600 dark:text-red-400">
+                  <X className="h-4 w-4 mr-2" />
+                  Este ticket ha sido rechazado
+                </div>
+              </div>
+            </div>
+          )}
           
           {message.attachments && message.attachments.length > 0 && (
             <div className="mt-4 pt-3 border-t border-current/20">
@@ -531,50 +630,135 @@ const CustomFieldsCard: React.FC<{ customFields: Record<string, any> }> = ({ cus
 );
 
 // Activity Timeline Component
-const ActivityTimeline: React.FC<{ ticket: TicketDetail }> = ({ ticket }) => (
-  <Card>
-    <CardHeader>
-      <CardTitle className="text-sm flex items-center">
-        <Activity className="h-4 w-4 mr-2" />
-        Activity Timeline
-      </CardTitle>
-    </CardHeader>
-    <CardContent>
-      <div className="space-y-4">
-        <div className="flex items-start space-x-3">
-          <div className="w-2 h-2 bg-green-500 rounded-full mt-2" />
-          <div className="flex-1">
-            <div className="text-sm font-medium">Ticket created</div>
-            <div className="text-xs text-muted-foreground">
-              {format(new Date(ticket.createdAt), 'MMM dd, yyyy HH:mm')}
-            </div>
-          </div>
-        </div>
+interface ActivityEvent {
+  type: string;
+  title: string;
+  timestamp: string;
+  color: string;
+  icon: any;
+  details?: string;
+}
+
+const ActivityTimeline: React.FC<{ ticket: TicketDetail }> = ({ ticket }) => {
+  // Extract activity events from messages
+  const getActivityEvents = (): ActivityEvent[] => {
+    const events: ActivityEvent[] = [
+      {
+        type: 'created',
+        title: 'Ticket created',
+        timestamp: ticket.createdAt,
+        color: 'bg-green-500',
+        icon: CheckCircle
+      }
+    ];
+
+    if (ticket.assignedAgent) {
+      events.push({
+        type: 'assigned',
+        title: `Assigned to ${ticket.assignedAgent.name}`,
+        timestamp: ticket.createdAt,
+        color: 'bg-blue-500',
+        icon: UserPlus
+      });
+    }
+
+    // Add events from messages
+    ticket.messages.forEach(message => {
+      if (message.content.includes('calificación') || message.content.includes('rating')) {
+        const ratingMatch = message.content.match(/(\d+)\s*(estrella|star)/i);
+        const rating = ratingMatch ? parseInt(ratingMatch[1]) : null;
         
-        {ticket.assignedAgent && (
-          <div className="flex items-start space-x-3">
-            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2" />
-            <div className="flex-1">
-              <div className="text-sm font-medium">Assigned to {ticket.assignedAgent.name}</div>
-              <div className="text-xs text-muted-foreground">
-                {format(new Date(ticket.createdAt), 'MMM dd, yyyy HH:mm')}
+        events.push({
+          type: 'rated',
+          title: rating ? `Ticket calificado con ${rating} estrellas` : 'Ticket calificado',
+          timestamp: message.timestamp,
+          color: rating && rating < 3 ? 'bg-red-500' : 'bg-yellow-500',
+          icon: Star,
+          details: rating && rating < 3 ? 'Calificación baja - Requiere atención' : undefined
+        });
+      }
+
+      if (message.content.includes('escalado') || message.content.includes('escalated')) {
+        events.push({
+          type: 'escalated',
+          title: 'Ticket escalado',
+          timestamp: message.timestamp,
+          color: 'bg-orange-500',
+          icon: TrendingUp,
+          details: 'Ticket escalado a nivel superior'
+        });
+      }
+
+      if (message.content.includes('rechazado') || message.content.includes('rejected')) {
+        events.push({
+          type: 'rejected',
+          title: 'Ticket rechazado',
+          timestamp: message.timestamp,
+          color: 'bg-red-500',
+          icon: X,
+          details: 'Ticket rechazado por el agente'
+        });
+      }
+    });
+
+    events.push({
+      type: 'status_updated',
+      title: `Status updated to ${ticket.status}`,
+      timestamp: ticket.updatedAt,
+      color: 'bg-gray-500',
+      icon: Activity
+    });
+
+    // Sort events by timestamp
+    return events.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+  };
+
+  const activityEvents = getActivityEvents();
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-sm flex items-center">
+          <Activity className="h-4 w-4 mr-2" />
+          Activity Timeline
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-4">
+          {activityEvents.map((event, index) => {
+            const IconComponent = event.icon;
+            return (
+              <div key={`${event.type}-${index}`} className="flex items-start space-x-3">
+                <div className={`w-2 h-2 ${event.color} rounded-full mt-2`} />
+                <div className="flex-1">
+                  <div className="flex items-center space-x-2">
+                    <IconComponent className="h-3 w-3 text-muted-foreground" />
+                    <div className="text-sm font-medium">{event.title}</div>
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {format(new Date(event.timestamp), 'MMM dd, yyyy HH:mm')}
+                  </div>
+                  {event.details && (
+                    <div className={`text-xs mt-1 p-2 rounded ${
+                      event.type === 'rated' && event.color === 'bg-red-500' 
+                        ? 'bg-red-50 text-red-700 border border-red-200' 
+                        : event.type === 'escalated'
+                        ? 'bg-orange-50 text-orange-700 border border-orange-200'
+                        : event.type === 'rejected'
+                        ? 'bg-red-50 text-red-700 border border-red-200'
+                        : 'bg-muted text-muted-foreground'
+                    }`}>
+                      {event.details}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          </div>
-        )}
-        
-        <div className="flex items-start space-x-3">
-          <div className="w-2 h-2 bg-orange-500 rounded-full mt-2" />
-          <div className="flex-1">
-            <div className="text-sm font-medium">Status updated to {ticket.status}</div>
-            <div className="text-xs text-muted-foreground">
-              {format(new Date(ticket.updatedAt), 'MMM dd, yyyy HH:mm')}
-            </div>
-          </div>
+            );
+          })}
         </div>
-      </div>
-    </CardContent>
-  </Card>
-);
+      </CardContent>
+    </Card>
+  );
+};
 
 export default TicketViewEnhanced;
