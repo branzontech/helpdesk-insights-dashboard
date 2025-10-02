@@ -138,7 +138,7 @@ const TicketList: React.FC<TicketListProps> = ({
   }, {} as Record<string, number>);
 
   return (
-    <div className="h-full flex flex-col bg-background">
+    <div className="h-full min-h-0 flex flex-col bg-background">
       {/* Minimalist Header */}
       <div className="p-4 border-b space-y-3">
         <div className="flex items-center justify-between">

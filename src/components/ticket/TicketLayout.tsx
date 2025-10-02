@@ -73,11 +73,11 @@ const TicketLayout = () => {
         </header>
 
       {/* Main Content with Resizable Panels */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden min-h-0">
         <PanelGroup direction="horizontal">
           {/* Ticket List Panel */}
           <Panel defaultSize={25} minSize={20} maxSize={40}>
-            <div data-tour="tickets-list">
+            <div data-tour="tickets-list" className="h-full min-h-0 flex flex-col">
               <TicketList
                 tickets={tickets}
                 selectedTicketId={selectedTicketId}
@@ -102,7 +102,7 @@ const TicketLayout = () => {
           
           {/* Ticket View Panel */}
           <Panel defaultSize={75} minSize={50}>
-            <div data-tour="ticket-view">
+            <div data-tour="ticket-view" className="h-full min-h-0 flex flex-col">
               {selectedTicket ? (
                 <TicketViewEnhanced
                   ticket={selectedTicket}

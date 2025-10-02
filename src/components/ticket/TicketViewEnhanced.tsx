@@ -132,7 +132,7 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
   const slaStatus = getSLAStatus(ticket.sla);
 
   return (
-    <div className="h-full bg-background flex flex-col">
+    <div className="h-full min-h-0 bg-background flex flex-col">
       {/* Minimalist Header */}
       <div className="border-b bg-background">
         <div className="flex h-14 items-center justify-between px-6">
@@ -215,8 +215,8 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
       </div>
 
       {/* Main Content with Minimalist Tabs */}
-      <div className="flex-1 overflow-hidden">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+      <div className="flex-1 overflow-hidden min-h-0">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full min-h-0 flex flex-col">
           <div className="px-6 py-3 border-b">
             <TabsList className="grid w-full max-w-md grid-cols-3 h-9">
               <TabsTrigger value="conversation" className="text-sm data-[state=active]:shadow-none">
@@ -236,8 +236,8 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
             </TabsList>
           </div>
 
-          <div className="flex-1 overflow-hidden">
-            <TabsContent value="conversation" className="h-full mt-0 data-[state=active]:flex data-[state=active]:flex-col">
+          <div className="flex-1 overflow-hidden min-h-0">
+            <TabsContent value="conversation" className="h-full min-h-0 mt-0 data-[state=active]:flex data-[state=active]:flex-col">
               {/* Messages */}
               <ScrollArea className="flex-1 px-6">
                 <div className="space-y-6 py-4">
@@ -301,7 +301,7 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
               </div>
             </TabsContent>
 
-            <TabsContent value="details" className="h-full mt-0 data-[state=active]:flex data-[state=active]:flex-col">
+            <TabsContent value="details" className="h-full min-h-0 mt-0 data-[state=active]:flex data-[state=active]:flex-col">
               <ScrollArea className="flex-1 px-6">
                 <div className="py-4 space-y-6">
                   {/* Customer Details */}
@@ -318,7 +318,7 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
               </ScrollArea>
             </TabsContent>
 
-            <TabsContent value="activity" className="h-full mt-0 data-[state=active]:flex data-[state=active]:flex-col">
+            <TabsContent value="activity" className="h-full min-h-0 mt-0 data-[state=active]:flex data-[state=active]:flex-col">
               <ScrollArea className="flex-1 px-6">
                 <div className="py-4">
                   <ActivityTimeline ticket={ticket} />
