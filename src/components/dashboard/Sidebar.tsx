@@ -16,14 +16,15 @@ interface NavItemProps {
   icon: React.ElementType;
   label: string;
   to: string;
+  'data-tour'?: string;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, to }) => {
+const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, to, 'data-tour': dataTour }) => {
   const location = useLocation();
   const active = location.pathname === to;
   
   return (
-    <li>
+    <li data-tour={dataTour}>
       <Link 
         to={to}
         className={cn(
@@ -56,9 +57,7 @@ const Sidebar: React.FC = () => {
           <p className="text-xs uppercase text-white/50 font-semibold mb-2 px-4">GENERAL</p>
           <ul className="space-y-1 mb-6">
             <NavItem icon={ChartBar} label="Dashboard" to="/" />
-            <li data-tour="sidebar-tickets">
-              <NavItem icon={MessageSquare} label="Tickets" to="/tickets" />
-            </li>
+            <NavItem icon={MessageSquare} label="Tickets" to="/tickets" data-tour="sidebar-tickets" />
             <NavItem icon={Users} label="Agentes" to="/agents" />
           </ul>
           
@@ -71,12 +70,8 @@ const Sidebar: React.FC = () => {
           
           <p className="text-xs uppercase text-white/50 font-semibold mb-2 px-4">CONFIGURACIÓN</p>
           <ul className="space-y-1 mb-6">
-            <li data-tour="sidebar-knowledge">
-              <NavItem icon={MessageSquare} label="Base de Conocimientos" to="/knowledge" />
-            </li>
-            <li data-tour="sidebar-parameters">
-              <NavItem icon={Settings} label="Parámetros" to="/parameters" />
-            </li>
+            <NavItem icon={MessageSquare} label="Base de Conocimientos" to="/knowledge" data-tour="sidebar-knowledge" />
+            <NavItem icon={Settings} label="Parámetros" to="/parameters" data-tour="sidebar-parameters" />
             <NavItem icon={Settings} label="Configuración" to="/settings" />
           </ul>
         </nav>
