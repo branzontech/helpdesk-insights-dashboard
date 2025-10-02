@@ -7,7 +7,8 @@ import {
   ChartLine, 
   Clock, 
   ChartPie,
-  Settings
+  Settings,
+  Zap
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -70,6 +71,7 @@ const Sidebar: React.FC = () => {
           
           <p className="text-xs uppercase text-white/50 font-semibold mb-2 px-4">CONFIGURACIÓN</p>
           <ul className="space-y-1 mb-6">
+            <NavItem icon={Zap} label="Smart Flows" to="/smartflows" />
             <NavItem icon={MessageSquare} label="Base de Conocimientos" to="/knowledge" data-tour="sidebar-knowledge" />
             <NavItem icon={Settings} label="Parámetros" to="/parameters" data-tour="sidebar-parameters" />
             <NavItem icon={Settings} label="Configuración" to="/settings" />

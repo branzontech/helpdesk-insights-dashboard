@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import TicketLayout from "./components/ticket/TicketLayout";
 import KnowledgeBaseLayout from "./components/knowledge/KnowledgeBaseLayout";
 import ParametersLayout from "./components/parameters/ParametersLayout";
+import SmartFlows from "./pages/SmartFlows";
 import { TourProvider } from "./components/tour/TourProvider";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/ticket/:id" element={<TicketLayout />} />
             <Route path="/knowledge" element={<KnowledgeBaseLayout />} />
             <Route path="/parameters" element={<ParametersLayout />} />
+            <Route path="/smartflows" element={<SmartFlows />} />
             <Route path="/settings" element={<Settings />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
