@@ -36,7 +36,8 @@ import {
   List,
   Link,
   ChevronDown,
-  X
+  X,
+  Zap
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -53,6 +54,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { TicketDetail, TicketMessage } from '@/lib/mockData';
 import { formatDistanceToNow, format } from 'date-fns';
+import { SmartFlowPanel } from './SmartFlowPanel';
+import { SmartFlow } from '@/types/smartFlow';
 
 interface TicketViewEnhancedProps {
   ticket: TicketDetail;
@@ -218,7 +221,7 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
       <div className="flex-1 overflow-hidden min-h-0">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full min-h-0 flex flex-col">
           <div className="px-6 py-3 border-b">
-            <TabsList className="grid w-full max-w-md grid-cols-3 h-9">
+            <TabsList className="grid w-full max-w-2xl grid-cols-4 h-9">
               <TabsTrigger value="conversation" className="text-sm data-[state=active]:shadow-none">
                 Conversation
                 {filteredMessages.length > 0 && (
@@ -226,6 +229,10 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
                     {filteredMessages.length}
                   </span>
                 )}
+              </TabsTrigger>
+              <TabsTrigger value="smartflow" className="text-sm data-[state=active]:shadow-none">
+                <Zap className="h-3.5 w-3.5 mr-1.5" />
+                Smart Flows
               </TabsTrigger>
               <TabsTrigger value="details" className="text-sm data-[state=active]:shadow-none">
                 Details
@@ -298,6 +305,18 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
                     </Button>
                   </div>
                 </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="smartflow" className="h-full min-h-0 mt-0 data-[state=active]:flex data-[state=active]:flex-col">
+              <div className="flex-1 overflow-hidden px-6 py-4">
+                <SmartFlowPanel 
+                  ticketId={ticket.id}
+                  onApplyFlow={(flow: SmartFlow) => {
+                    console.log('Aplicando Smart Flow:', flow, 'al ticket:', ticket.id);
+                    // Aquí se implementaría la lógica para aplicar las acciones del flow
+                  }}
+                />
               </div>
             </TabsContent>
 
