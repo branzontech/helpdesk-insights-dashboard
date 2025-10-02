@@ -332,55 +332,197 @@ const TicketViewEnhanced: React.FC<TicketViewEnhancedProps> = ({
   );
 };
 
-// Enhanced Message Component with Rating, Escalation, and Rejection features
+// Enhanced Message Component with Rating, Escalation, and Agent Assignment features
 const MessageItemEnhanced: React.FC<{ message: TicketMessage }> = ({ message }) => {
   const isAgent = message.author.type === 'agent';
   const isSystem = message.author.type === 'system';
   const isPrivate = message.isPrivate;
+  const metadata = message.metadata;
 
-  // Check for special message types
-  const isRatingMessage = message.content.includes('calificación') || message.content.includes('rating');
-  const isEscalationMessage = message.content.includes('escalado') || message.content.includes('escalated');
-  const isRejectionMessage = message.content.includes('rechazado') || message.content.includes('rejected');
-  
-  const renderStarRating = (rating: number) => {
-    return (
-      <div className="flex items-center space-x-1 mt-2">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            className={`h-4 w-4 ${
-              star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-            }`}
-          />
-        ))}
-        <span className="text-sm ml-2">{rating}/5 estrellas</span>
-      </div>
-    );
-  };
+  // Render special system events based on metadata
+  if (isSystem && metadata) {
+    // Agent Assignment Event
+    if (metadata.type === 'agent_assigned') {
+      return (
+        <div className="flex justify-center my-4">
+          <div className="max-w-md w-full">
+            <Card className="border-blue-200 bg-blue-50/50 dark:bg-blue-950/20">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-3">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center">
+                      <UserPlus className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                      Agente asignado
+                    </p>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage src={metadata.agentAvatar} />
+                        <AvatarFallback className="text-xs">
+                          {metadata.agentName?.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm text-blue-700 dark:text-blue-300">
+                        {metadata.agentName}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-xs text-blue-600/70 dark:text-blue-400/70">
+                    {format(new Date(message.timestamp), 'HH:mm')}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+    }
 
-  const extractRatingFromMessage = (content: string): number | null => {
-    const ratingMatch = content.match(/(\d+)\s*(estrella|star)/i);
-    return ratingMatch ? parseInt(ratingMatch[1]) : null;
-  };
+    // Escalation Event
+    if (metadata.type === 'escalated') {
+      return (
+        <div className="flex justify-center my-4">
+          <div className="max-w-md w-full">
+            <Card className="border-orange-200 bg-gradient-to-r from-orange-50/80 to-amber-50/80 dark:from-orange-950/20 dark:to-amber-950/20">
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-orange-100 dark:bg-orange-900/50 flex items-center justify-center">
+                      <TrendingUp className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-orange-900 dark:text-orange-100 mb-1">
+                      Ticket escalado
+                    </p>
+                    <div className="space-y-1">
+                      <div className="flex items-center text-sm text-orange-800 dark:text-orange-200">
+                        <span className="font-medium">Nivel:</span>
+                        <span className="ml-2">{metadata.escalationLevel}</span>
+                      </div>
+                      {metadata.reason && (
+                        <div className="text-xs text-orange-700/80 dark:text-orange-300/80 mt-1">
+                          <span className="font-medium">Motivo:</span> {metadata.reason}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="text-xs text-orange-600/70 dark:text-orange-400/70">
+                    {format(new Date(message.timestamp), 'HH:mm')}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+    }
 
-  const extractReasonFromMessage = (content: string): string | null => {
-    const reasonMatch = content.match(/motivo:\s*(.+)/i);
-    return reasonMatch ? reasonMatch[1] : null;
-  };
+    // Rating Event
+    if (metadata.type === 'rating' && metadata.rating) {
+      const rating = metadata.rating;
+      const isLowRating = rating <= 2;
+      const isMediumRating = rating === 3;
+      const isHighRating = rating >= 4;
 
+      return (
+        <div className="flex justify-center my-4">
+          <div className="max-w-md w-full">
+            <Card className={`${
+              isLowRating 
+                ? 'border-red-200 bg-gradient-to-br from-red-50/80 to-rose-50/80 dark:from-red-950/20 dark:to-rose-950/20'
+                : isMediumRating
+                ? 'border-yellow-200 bg-gradient-to-br from-yellow-50/80 to-amber-50/80 dark:from-yellow-950/20 dark:to-amber-950/20'
+                : 'border-green-200 bg-gradient-to-br from-green-50/80 to-emerald-50/80 dark:from-green-950/20 dark:to-emerald-950/20'
+            }`}>
+              <CardContent className="p-4">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0">
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                      isLowRating 
+                        ? 'bg-red-100 dark:bg-red-900/50'
+                        : isMediumRating
+                        ? 'bg-yellow-100 dark:bg-yellow-900/50'
+                        : 'bg-green-100 dark:bg-green-900/50'
+                    }`}>
+                      <Star className={`h-5 w-5 ${
+                        isLowRating 
+                          ? 'text-red-600 dark:text-red-400 fill-red-600 dark:fill-red-400'
+                          : isMediumRating
+                          ? 'text-yellow-600 dark:text-yellow-400 fill-yellow-600 dark:fill-yellow-400'
+                          : 'text-green-600 dark:text-green-400 fill-green-600 dark:fill-green-400'
+                      }`} />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-semibold mb-2 ${
+                      isLowRating 
+                        ? 'text-red-900 dark:text-red-100'
+                        : isMediumRating
+                        ? 'text-yellow-900 dark:text-yellow-100'
+                        : 'text-green-900 dark:text-green-100'
+                    }`}>
+                      Calificación del cliente
+                    </p>
+                    <div className="flex items-center space-x-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`h-4 w-4 ${
+                            star <= rating 
+                              ? 'fill-yellow-400 text-yellow-400' 
+                              : 'text-gray-300 dark:text-gray-600'
+                          }`}
+                        />
+                      ))}
+                      <span className="text-sm font-bold ml-2 text-foreground">
+                        {rating}/5
+                      </span>
+                    </div>
+                    {metadata.feedback && (
+                      <div className={`mt-2 text-xs italic ${
+                        isLowRating 
+                          ? 'text-red-700 dark:text-red-300'
+                          : isMediumRating
+                          ? 'text-yellow-700 dark:text-yellow-300'
+                          : 'text-green-700 dark:text-green-300'
+                      }`}>
+                        "{metadata.feedback}"
+                      </div>
+                    )}
+                  </div>
+                  <div className={`text-xs ${
+                    isLowRating 
+                      ? 'text-red-600/70 dark:text-red-400/70'
+                      : isMediumRating
+                      ? 'text-yellow-600/70 dark:text-yellow-400/70'
+                      : 'text-green-600/70 dark:text-green-400/70'
+                  }`}>
+                    {format(new Date(message.timestamp), 'HH:mm')}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      );
+    }
+  }
+
+  // Regular message rendering
   return (
     <div className={`flex ${isAgent && !isSystem ? 'justify-end' : 'justify-start'}`}>
       <div className={`max-w-[85%] ${isAgent && !isSystem ? 'order-2' : 'order-1'}`}>
         <div className="flex items-center space-x-2 mb-2">
-          {!isSystem && (
-            <Avatar className="h-7 w-7">
-              <AvatarImage src={message.author.avatar} />
-              <AvatarFallback className="text-xs">
-                {message.author.name.split(' ').map(n => n[0]).join('')}
-              </AvatarFallback>
-            </Avatar>
-          )}
+          <Avatar className="h-7 w-7">
+            <AvatarImage src={message.author.avatar} />
+            <AvatarFallback className="text-xs">
+              {message.author.name.split(' ').map(n => n[0]).join('')}
+            </AvatarFallback>
+          </Avatar>
           <span className="text-sm font-medium">{message.author.name}</span>
           <span className="text-xs text-muted-foreground">
             {format(new Date(message.timestamp), 'MMM dd, HH:mm')}
@@ -391,86 +533,16 @@ const MessageItemEnhanced: React.FC<{ message: TicketMessage }> = ({ message }) 
               Private
             </Badge>
           )}
-          {isEscalationMessage && (
-            <Badge variant="destructive" className="text-xs">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              Escalado
-            </Badge>
-          )}
-          {isRejectionMessage && (
-            <Badge variant="destructive" className="text-xs">
-              <X className="h-3 w-3 mr-1" />
-              Rechazado
-            </Badge>
-          )}
         </div>
         
         <div 
           className={`rounded-lg p-4 transition-all hover:shadow-sm ${
-            isSystem 
-              ? 'bg-muted border-l-4 border-l-primary text-sm'
-              : isAgent 
-                ? 'bg-primary text-primary-foreground' 
-                : 'bg-muted border'
-          } ${isPrivate ? 'border-2 border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20' : ''}
-          ${isEscalationMessage ? 'border-2 border-orange-200 bg-orange-50 dark:bg-orange-950/20' : ''}
-          ${isRejectionMessage ? 'border-2 border-red-200 bg-red-50 dark:bg-red-950/20' : ''}
-          ${isRatingMessage ? 'border-2 border-blue-200 bg-blue-50 dark:bg-blue-950/20' : ''}`}
+            isAgent 
+              ? 'bg-primary text-primary-foreground' 
+              : 'bg-muted border'
+          } ${isPrivate ? 'border-2 border-yellow-200 bg-yellow-50 dark:bg-yellow-950/20' : ''}`}
         >
           <div className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</div>
-          
-          {/* Rating Display */}
-          {isRatingMessage && (() => {
-            const rating = extractRatingFromMessage(message.content);
-            const reason = extractReasonFromMessage(message.content);
-            
-            return (
-              <div className="mt-3 pt-3 border-t border-current/20">
-                {rating && (
-                  <div className="flex flex-col space-y-2">
-                    {renderStarRating(rating)}
-                    {rating < 3 && (
-                      <div className="p-2 bg-red-50 dark:bg-red-950/30 border border-red-200 rounded text-sm">
-                        <div className="flex items-center text-red-600 dark:text-red-400 mb-1">
-                          <AlertCircle className="h-4 w-4 mr-1" />
-                          Calificación baja detectada
-                        </div>
-                        {reason && (
-                          <div className="text-red-700 dark:text-red-300">
-                            <strong>Motivo:</strong> {reason}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })()}
-
-          {/* Escalation Indicator */}
-          {isEscalationMessage && (
-            <div className="mt-3 pt-3 border-t border-current/20">
-              <div className="p-2 bg-orange-50 dark:bg-orange-950/30 border border-orange-200 rounded text-sm">
-                <div className="flex items-center text-orange-600 dark:text-orange-400">
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  Este ticket ha sido escalado a un nivel superior
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Rejection Indicator */}
-          {isRejectionMessage && (
-            <div className="mt-3 pt-3 border-t border-current/20">
-              <div className="p-2 bg-red-50 dark:bg-red-950/30 border border-red-200 rounded text-sm">
-                <div className="flex items-center text-red-600 dark:text-red-400">
-                  <X className="h-4 w-4 mr-2" />
-                  Este ticket ha sido rechazado
-                </div>
-              </div>
-            </div>
-          )}
           
           {message.attachments && message.attachments.length > 0 && (
             <div className="mt-4 pt-3 border-t border-current/20">

@@ -46,6 +46,16 @@ export interface TicketMessage {
     type: string;
   }>;
   isPrivate?: boolean;
+  metadata?: {
+    type?: 'agent_assigned' | 'escalated' | 'rating' | 'status_change';
+    agentId?: string;
+    agentName?: string;
+    agentAvatar?: string;
+    escalationLevel?: string;
+    reason?: string;
+    rating?: number;
+    feedback?: string;
+  };
 }
 
 export interface TicketDetail {

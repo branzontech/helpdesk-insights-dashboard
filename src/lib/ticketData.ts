@@ -473,11 +473,11 @@ export const mockTickets: TicketDetail[] = [
     id: "TICK-2024-009",
     title: "SSL certificate expiring soon",
     description: "Main website SSL certificate will expire in 3 days. Need renewal urgently.",
-    status: "open",
+    status: "closed",
     priority: "high",
     category: "Security",
     createdAt: "2024-01-16T13:15:00Z",
-    updatedAt: "2024-01-16T13:15:00Z",
+    updatedAt: "2024-01-17T18:30:00Z",
     tags: ["ssl", "certificate", "security", "website"],
     customer: {
       id: "CUST-009",
@@ -491,10 +491,111 @@ export const mockTickets: TicketDetail[] = [
       totalTickets: 6,
       satisfactionScore: 4.9
     },
-    messages: [],
+    assignedAgent: {
+      id: "AGENT-002",
+      name: "María López",
+      avatar: "https://images.unsplash.com/photo-1594736797933-d0c56662bdc6?w=150&h=150&fit=crop&crop=face",
+      email: "maria.lopez@support.com"
+    },
+    messages: [
+      {
+        id: "MSG-901",
+        content: "Our SSL certificate for www.secureweb.com is expiring in 3 days (January 19th). We need this renewed urgently to avoid any service interruption.",
+        timestamp: "2024-01-16T13:15:00Z",
+        author: {
+          id: "CUST-009",
+          name: "Sandra Kim",
+          avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+          type: "customer"
+        }
+      },
+      {
+        id: "MSG-902",
+        content: "AGENT_ASSIGNED: María López has been assigned to this ticket.",
+        timestamp: "2024-01-16T13:20:00Z",
+        author: {
+          id: "SYSTEM",
+          name: "System",
+          avatar: "",
+          type: "system"
+        },
+        metadata: {
+          type: "agent_assigned",
+          agentId: "AGENT-002",
+          agentName: "María López",
+          agentAvatar: "https://images.unsplash.com/photo-1594736797933-d0c56662bdc6?w=150&h=150&fit=crop&crop=face"
+        }
+      },
+      {
+        id: "MSG-903",
+        content: "Hello Sandra, I've received your ticket and I'm looking into the SSL certificate renewal process right away. I'll get this sorted out for you.",
+        timestamp: "2024-01-16T13:25:00Z",
+        author: {
+          id: "AGENT-002",
+          name: "María López",
+          avatar: "https://images.unsplash.com/photo-1594736797933-d0c56662bdc6?w=150&h=150&fit=crop&crop=face",
+          type: "agent"
+        }
+      },
+      {
+        id: "MSG-904",
+        content: "ESCALATED: This ticket has been escalated to Level 2 Support - Security Team due to certificate authority validation requirements.",
+        timestamp: "2024-01-16T14:30:00Z",
+        author: {
+          id: "SYSTEM",
+          name: "System",
+          avatar: "",
+          type: "system"
+        },
+        metadata: {
+          type: "escalated",
+          escalationLevel: "Level 2 Support - Security Team",
+          reason: "Certificate authority validation requirements"
+        }
+      },
+      {
+        id: "MSG-905",
+        content: "The certificate renewal has been completed successfully. The new certificate is valid until January 16, 2025. All systems are showing secure connection status.",
+        timestamp: "2024-01-17T10:15:00Z",
+        author: {
+          id: "AGENT-002",
+          name: "María López",
+          avatar: "https://images.unsplash.com/photo-1594736797933-d0c56662bdc6?w=150&h=150&fit=crop&crop=face",
+          type: "agent"
+        }
+      },
+      {
+        id: "MSG-906",
+        content: "Excellent work! Everything is working perfectly. Thank you for the quick turnaround.",
+        timestamp: "2024-01-17T11:45:00Z",
+        author: {
+          id: "CUST-009",
+          name: "Sandra Kim",
+          avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+          type: "customer"
+        }
+      },
+      {
+        id: "MSG-907",
+        content: "RATING: Customer rated this ticket 5 stars. Feedback: Fast response and professional handling of a critical security issue.",
+        timestamp: "2024-01-17T18:30:00Z",
+        author: {
+          id: "SYSTEM",
+          name: "System",
+          avatar: "",
+          type: "system"
+        },
+        metadata: {
+          type: "rating",
+          rating: 5,
+          feedback: "Fast response and professional handling of a critical security issue."
+        }
+      }
+    ],
     customFields: {
       expiryDate: "2024-01-19",
-      certificateType: "Wildcard SSL"
+      certificateType: "Wildcard SSL",
+      renewedUntil: "2025-01-16"
     },
     sla: {
       firstResponseTime: 30,
