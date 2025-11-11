@@ -1,8 +1,13 @@
 
 import React from 'react';
-import { Calendar, User } from 'lucide-react';
+import { Calendar, User, Bell } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useNotifications } from '@/hooks/useNotifications';
+import { toast } from 'sonner';
 
 const Header: React.FC = () => {
+  const { showNotification, checkPermission } = useNotifications();
+  
   // Obtener la fecha actual en español
   const getCurrentDate = () => {
     return new Date().toLocaleDateString('es-ES', {
@@ -11,6 +16,23 @@ const Header: React.FC = () => {
       month: 'long',
       day: 'numeric',
     });
+  };
+
+  const testNotification = async () => {
+    const permission = checkPermission();
+    
+    if (permission === 'denied') {
+      toast.error('Las notificaciones están bloqueadas. Permite las notificaciones en tu navegador.');
+      return;
+    }
+
+    await showNotification({
+      title: '🎫 Nuevo Ticket Creado',
+      body: 'TICK-TEST-001: Problema con impresora - Juan Pérez',
+      tag: 'test-notification',
+    });
+    
+    toast.success('Notificación de prueba enviada');
   };
 
   return (
@@ -22,8 +44,17 @@ const Header: React.FC = () => {
           <span>{getCurrentDate()}</span>
         </div>
       </div>
-      <div className="flex items-center mt-4 md:mt-0">
-        <div className="bg-ithelp-lime text-ithelp-teal-dark px-3 py-1 rounded-full text-sm font-medium mr-4">
+      <div className="flex items-center mt-4 md:mt-0 gap-3">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={testNotification}
+          className="flex items-center gap-2"
+        >
+          <Bell className="h-4 w-4" />
+          Probar Notificación
+        </Button>
+        <div className="bg-ithelp-lime text-ithelp-teal-dark px-3 py-1 rounded-full text-sm font-medium">
           ITIL v4
         </div>
         <div className="flex items-center">
