@@ -6,7 +6,10 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { toast } from 'sonner';
 
 const Header: React.FC = () => {
+  console.log('🏗️ Header component renderizado');
+  
   const { showNotification, checkPermission } = useNotifications();
+  console.log('🔧 Hook useNotifications inicializado');
   
   // Obtener la fecha actual en español
   const getCurrentDate = () => {
@@ -19,20 +22,32 @@ const Header: React.FC = () => {
   };
 
   const testNotification = async () => {
+    console.log('🎯 Botón "Probar Notificación" clickeado');
+    console.log('📋 Verificando permisos...');
+    
     const permission = checkPermission();
+    console.log('🔐 Estado de permisos:', permission);
     
     if (permission === 'denied') {
+      console.log('🚫 Permisos denegados, mostrando toast');
       toast.error('Las notificaciones están bloqueadas. Permite las notificaciones en tu navegador.');
       return;
     }
 
-    await showNotification({
-      title: '🎫 Nuevo Ticket Creado',
-      body: 'TICK-TEST-001: Problema con impresora - Juan Pérez',
-      tag: 'test-notification',
-    });
-    
-    toast.success('Notificación de prueba enviada');
+    console.log('📤 Enviando notificación de prueba...');
+    try {
+      await showNotification({
+        title: '🎫 Nuevo Ticket Creado',
+        body: 'TICK-TEST-001: Problema con impresora - Juan Pérez',
+        tag: 'test-notification',
+      });
+      
+      console.log('✅ showNotification completado');
+      toast.success('Notificación de prueba enviada');
+    } catch (error) {
+      console.error('❌ Error al enviar notificación:', error);
+      toast.error('Error al enviar la notificación');
+    }
   };
 
   return (
