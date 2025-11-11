@@ -8,8 +8,15 @@ import { toast } from 'sonner';
 export const NotificationPermission = () => {
   const [showPrompt, setShowPrompt] = useState(false);
   const { requestPermission, checkPermission, isSupported } = useNotifications();
+  const inIframe = window.top !== window.self;
 
   useEffect(() => {
+    // No mostrar el prompt normal si estamos en iframe
+    if (inIframe) {
+      console.log('🖼️ Detectado iframe, no se mostrará el prompt estándar');
+      return;
+    }
+    
     if (isSupported && checkPermission() === 'default') {
       // Show prompt after 2 seconds
       const timer = setTimeout(() => {
@@ -18,7 +25,7 @@ export const NotificationPermission = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [isSupported, checkPermission]);
+  }, [isSupported, checkPermission, inIframe]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -35,9 +42,17 @@ export const NotificationPermission = () => {
     }
   }, [requestPermission]);
   const handleEnable = async () => {
-    const permission = await requestPermission();
-    if (permission === 'granted') {
+    console.log('👆 Click en botón Activar');
+    const perm = await requestPermission();
+    console.log('🎯 Resultado final:', perm);
+    
+    if (perm === 'granted') {
       setShowPrompt(false);
+      toast.success('¡Notificaciones activadas correctamente!');
+    } else if (perm === 'default') {
+      toast.error('No se pudo solicitar el permiso. Abre la app en una nueva pestaña.');
+    } else {
+      toast.error('Permiso denegado. Revisa la configuración de tu navegador.');
     }
   };
 

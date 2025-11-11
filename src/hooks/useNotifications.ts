@@ -41,9 +41,30 @@ export const useNotifications = () => {
 
     if (Notification.permission !== 'denied') {
       console.log('⏳ Solicitando permiso al usuario...');
-      const permission = await Notification.requestPermission();
-      console.log('📋 Respuesta del usuario:', permission);
-      return permission;
+      
+      // Detectar si estamos en iframe
+      const inIframe = window.top !== window.self;
+      if (inIframe) {
+        console.warn('⚠️ Estamos en un iframe, los permisos pueden no funcionar');
+      }
+      
+      try {
+        const permission = await Promise.race([
+          Notification.requestPermission(),
+          new Promise<NotificationPermission>((resolve) => 
+            setTimeout(() => {
+              console.warn('⏱️ Timeout: El usuario no respondió en 10 segundos');
+              resolve('default');
+            }, 10000)
+          )
+        ]);
+        
+        console.log('📋 Respuesta del usuario:', permission);
+        return permission;
+      } catch (error) {
+        console.error('❌ Error al solicitar permisos:', error);
+        return 'denied';
+      }
     }
 
     console.log('🚫 Permisos denegados previamente');
