@@ -1,8 +1,10 @@
 import { useState, useCallback } from 'react';
 import { TicketDetail } from '@/lib/mockData';
 import { mockTickets } from '@/lib/ticketData';
+import { useNotifications } from './useNotifications';
 
 export const useTickets = () => {
+  const { showNotification } = useNotifications();
   const [tickets, setTickets] = useState<TicketDetail[]>(mockTickets);
   const [selectedTicketId, setSelectedTicketId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -73,8 +75,16 @@ export const useTickets = () => {
 
     setTickets(prev => [newTicket, ...prev]);
     setSelectedTicketId(newTicket.id);
+    
+    // Show notification
+    showNotification({
+      title: '🎫 Nuevo Ticket Creado',
+      body: `${newTicket.id}: ${newTicket.title} - ${newTicket.customer.name}`,
+      tag: newTicket.id,
+    });
+    
     return newTicket;
-  }, []);
+  }, [showNotification]);
 
   const updateTicket = useCallback((ticketId: string, updates: Partial<TicketDetail>) => {
     setTickets(prev => prev.map(ticket => 
