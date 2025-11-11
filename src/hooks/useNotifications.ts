@@ -25,59 +25,97 @@ export const useNotifications = () => {
   }, []);
 
   const requestPermission = async (): Promise<NotificationPermission> => {
+    console.log('🔔 Solicitando permiso de notificaciones...');
+    
     if (!('Notification' in window)) {
-      console.warn('Este navegador no soporta notificaciones');
+      console.warn('❌ Este navegador no soporta notificaciones');
       return 'denied';
     }
 
+    console.log('📊 Estado actual de permisos:', Notification.permission);
+
     if (Notification.permission === 'granted') {
+      console.log('✅ Permisos ya concedidos');
       return 'granted';
     }
 
     if (Notification.permission !== 'denied') {
+      console.log('⏳ Solicitando permiso al usuario...');
       const permission = await Notification.requestPermission();
+      console.log('📋 Respuesta del usuario:', permission);
       return permission;
     }
 
+    console.log('🚫 Permisos denegados previamente');
     return Notification.permission;
   };
 
   const showNotification = async (options: NotificationOptions) => {
+    console.log('🚀 Intentando mostrar notificación:', options);
+    
     const permission = await requestPermission();
 
     if (permission !== 'granted') {
-      console.warn('Permiso de notificaciones denegado');
+      console.warn('⚠️ Permiso de notificaciones denegado. Estado:', permission);
       return;
     }
+
+    console.log('✅ Permiso concedido, creando notificación...');
 
     // Play sound
     if (!options.silent && audioRef.current) {
       try {
+        console.log('🔊 Reproduciendo sonido de notificación...');
         audioRef.current.currentTime = 0;
         await audioRef.current.play();
+        console.log('✅ Sonido reproducido correctamente');
       } catch (error) {
-        console.error('Error reproduciendo sonido:', error);
+        console.error('❌ Error reproduciendo sonido:', error);
       }
     }
 
-    // Show notification
-    const notification = new Notification(options.title, {
-      body: options.body,
-      icon: options.icon || '/robot-mascot.png',
-      tag: options.tag,
-      requireInteraction: false,
-      badge: '/robot-mascot.png',
-    });
+    try {
+      // Show notification
+      console.log('📢 Creando notificación del sistema...');
+      const notification = new Notification(options.title, {
+        body: options.body,
+        icon: options.icon || '/robot-mascot.png',
+        tag: options.tag,
+        requireInteraction: false,
+        badge: '/robot-mascot.png',
+      });
 
-    // Auto close after 5 seconds
-    setTimeout(() => notification.close(), 5000);
+      console.log('✅ Notificación creada exitosamente:', notification);
 
-    notification.onclick = () => {
-      window.focus();
-      notification.close();
-    };
+      // Auto close after 5 seconds
+      setTimeout(() => {
+        console.log('⏰ Cerrando notificación automáticamente');
+        notification.close();
+      }, 5000);
 
-    return notification;
+      notification.onclick = () => {
+        console.log('👆 Usuario hizo clic en la notificación');
+        window.focus();
+        notification.close();
+      };
+
+      notification.onerror = (error) => {
+        console.error('❌ Error en la notificación:', error);
+      };
+
+      notification.onshow = () => {
+        console.log('👁️ Notificación mostrada al usuario');
+      };
+
+      notification.onclose = () => {
+        console.log('🔒 Notificación cerrada');
+      };
+
+      return notification;
+    } catch (error) {
+      console.error('❌ Error crítico al crear notificación:', error);
+      throw error;
+    }
   };
 
   const checkPermission = (): NotificationPermission => {
