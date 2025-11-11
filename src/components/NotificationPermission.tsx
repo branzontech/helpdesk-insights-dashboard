@@ -3,6 +3,7 @@ import { Bell, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { useNotifications } from '@/hooks/useNotifications';
+import { toast } from 'sonner';
 
 export const NotificationPermission = () => {
   const [showPrompt, setShowPrompt] = useState(false);
@@ -19,6 +20,20 @@ export const NotificationPermission = () => {
     }
   }, [isSupported, checkPermission]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('requestNotifications') === '1') {
+      (async () => {
+        const perm = await requestPermission();
+        if (perm === 'granted') {
+          setShowPrompt(false);
+          toast.success('Notificaciones activadas');
+        } else {
+          toast.error('No se pudieron activar las notificaciones');
+        }
+      })();
+    }
+  }, [requestPermission]);
   const handleEnable = async () => {
     const permission = await requestPermission();
     if (permission === 'granted') {

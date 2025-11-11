@@ -13,6 +13,7 @@ import KnowledgeBaseLayout from "./components/knowledge/KnowledgeBaseLayout";
 import ParametersLayout from "./components/parameters/ParametersLayout";
 import SmartFlows from "./pages/SmartFlows";
 import { TourProvider } from "./components/tour/TourProvider";
+import { NotificationIframeHint } from "@/components/NotificationIframeHint";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <NotificationPermission />
+        <NotificationIframeHint />
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
